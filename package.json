@@ -1,0 +1,26 @@
+{
+  "name": "reporting",
+  "version": "1.0.0",
+  "description": "reporting module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dobripet/reporting.git"
+  },
+  "author": "Petr Dobřička petr.dobricka@seznam.cz",
+  "license": "LGPL-2.1",
+  "homepage": "https://github.com/dobripet/reporting",
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "webpack": "^2.2.1"
+  },
+  "scripts": {
+    "watch": "webpack --watch -d"
+  },
+  "devDependencies": {
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.23.0"
+  }
+}

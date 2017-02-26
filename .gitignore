@@ -1,0 +1,23 @@
+*.class
+*.war
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+log/
+target/
+
+#Generated files
+bundle.js
+vendor.bundle.js
+
+#Node
+node_modules/
