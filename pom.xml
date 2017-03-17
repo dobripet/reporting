@@ -11,15 +11,10 @@
         <jdk.version>1.8</jdk.version>
         <springframework.version>4.3.3.RELEASE</springframework.version>
         <pentaho.version>7.0.0.3-64</pentaho.version>
+        <selenium.version>3.2.0</selenium.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- Pentaho -->
         <dependency>
@@ -49,6 +44,67 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.7</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-ie-driver</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- fix for webdrivermanager -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.12</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- temporary fix until webdriver manager is updated -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.11</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -81,6 +137,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
+                    <port>8081</port>
                     <path>/reporting</path>
                 </configuration>
             </plugin>
@@ -118,6 +175,34 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>
+                <groupId>com.github.webdriverextensions</groupId>
+                <artifactId>webdriverextensions-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install-drivers</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <drivers>
+                        <driver>
+                            <name>chromedriver</name>
+                            <platform>windows</platform>
+                            <bit>32</bit>
+                            <version>2.27</version>
+                        </driver>
+                        <driver>
+                            <name>internetexplorerdriver</name>
+                            <platform>windows</platform>
+                            <bit>64</bit>
+                            <version>3.2.0</version>
+                        </driver>
+                    </drivers>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
     <repositories>

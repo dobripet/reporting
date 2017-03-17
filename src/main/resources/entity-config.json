@@ -1,0 +1,22 @@
+{
+  "entities": [
+    { "name": "tab1",
+      "properties": [
+        {"name": "col1"},
+        {"name": "col2"},
+        {"name": "col3"},
+        {"name": "col4"},
+        {"name": "col5"}
+      ]
+    },
+    { "name": "tab2",
+      "properties": [
+        {"name": "col21"},
+        {"name": "col22"},
+        {"name": "col23"},
+        {"name": "col24"},
+        {"name": "col25"}
+      ]
+    }
+  ]
+}

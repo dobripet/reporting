@@ -34,9 +34,25 @@ module.exports = function(){
             })
         );
     }
-
     return {
-        entry: './src/main/js/app.js',
+        entry: {
+            app: './src/main/js/app.js',
+            vendor: [
+                'whatwg-fetch',
+                'react',
+                'react-dom',
+                'react-redux',
+                'react-router',
+                'react-loader',
+                'react-bootstrap',
+                'redux',
+                'redux-thunk',
+                'redux-logger',
+                'redux-promise-middleware',
+                'babel-polyfill',
+                'type-to-reducer'
+            ]
+        },
         devtool:  isProd ? 'source-map' : 'eval',
         output: {
             path: __dirname,
@@ -49,7 +65,10 @@ module.exports = function(){
                     exclude: [/node_modules/],
                     use: [{
                         loader: 'babel-loader',
-                        options: { presets: ['es2015', 'react'] }
+                        options: {
+                            presets: ['es2015', 'react', 'stage-2'],
+                            plugins: ['transform-decorators']
+                        }
                     }],
                 }
             ]

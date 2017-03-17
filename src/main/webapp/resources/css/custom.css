@@ -1,0 +1,8 @@
+.nav-tabs > li > a.active,
+.nav-tabs > li > a.active:hover,
+.nav-tabs > li > a.active:focus {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 3px solid #000000;
+}

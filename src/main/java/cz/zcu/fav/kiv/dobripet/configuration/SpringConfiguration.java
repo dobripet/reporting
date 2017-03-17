@@ -22,6 +22,9 @@ public class SpringConfiguration extends WebMvcConfigurerAdapter{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
+        //Important to setOrder, handles resources before controller
+        registry.setOrder(-1);
     }
 
     @Bean
@@ -30,7 +33,6 @@ public class SpringConfiguration extends WebMvcConfigurerAdapter{
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("/WEB-INF/view/");
         viewResolver.setSuffix(".jsp");
-
         return viewResolver;
     }
 
