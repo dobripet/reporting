@@ -6,3 +6,37 @@
     border-right: none;
     border-bottom: 3px solid #000000;
 }
+.horizontal-container {
+    flex: 1 100%;
+    display: flex;
+    flex-direction: row;
+}
+.vertical-container {
+    flex: 1 100%;
+    display: flex;
+    flex-direction: column;
+}
+.menu-section {
+    height: 50px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+}
+.entity-section {
+    margin: 5px;
+    padding: 5px;
+    width: 300px;
+    border: 1px solid;
+}
+.column-section {
+    height: 400px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+}
+.condition-section {
+    height: 100px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+}

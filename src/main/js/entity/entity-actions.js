@@ -15,5 +15,12 @@ export function fetchEntityList(){
             )
         }
     }
+}
 
+export const ENTITY_LIST_SEARCH = 'ENTITY_LIST_SEARCH';
+export function searchEntityList(text){
+    return {
+        type: ENTITY_LIST_SEARCH,
+        payload: text
+    }
 }

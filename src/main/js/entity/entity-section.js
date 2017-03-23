@@ -2,47 +2,43 @@
  * Created by Petr on 3/4/2017.
  */
 import React from 'react'
-import {FormControl} from 'react-bootstrap'
 import Loader from 'react-loader'
+import _ from 'lodash'
+import Search from './search'
+import EntityListItem from './entity-list-item'
 
 export default class EntitySection extends React.Component{
     constructor(props) {
         super(props);
-        //initial state
-        this.state ={
-            search : "",
-
-        };
         // bindings
-        this.handleSearch  = this.handleSearch.bind(this);
+        this.doSearch = _.debounce(props.searchEntityList, 500);
+        this.handleAddProperty  = this.handleAddProperty.bind(this);
     }
     componentDidMount() {
         //this.searchInput.focus();
         console.log("testing fetch");
         this.props.fetchEntityList();
     }
-
-
-    handleSearch(event) {
-        console.log(event.target.value, this.state);
-        this.setState({search: event.target.value});
-        return;
+    handleAddProperty (entity, properties){
+        console.log(entity, properties);
+        this.props.addPropertiesToColumnList(entity, properties);
     }
-
     render() {
+        let entities = <span>No entity or column found!</span>;
+        if(this.props.entities.length > 0) {
+            entities = this.props.entities.map(entity => <EntityListItem key={entity.name} entity={entity} onAdd={this.handleAddProperty}/>);
+        }
         return (
-            <div>
+            <div className="entity-section">
                 <Loader loaded={!this.props.loading}>
-                    <FormControl id="search-input" placeholder="Search tables and columns" inputRef={ref => {this.searchInput = ref}} onChange={this.handleSearch}/>
+                    <Search id="search-input" placeholder="Search table or column" onChange={this.doSearch} focus={true}/>
+                    {entities}
                 </Loader>
             </div>
 
         );
     }
 }
-class EntityList extends React.Component{
-    constructor(props){
-        super(props);
-
-    }
-}
+EntitySection.PropTypes={
+    entities: React.PropTypes.array.isRequired
+};

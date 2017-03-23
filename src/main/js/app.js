@@ -35,7 +35,7 @@ class App extends React.Component{
                         <li><Link to="/reporting/builder" activeClassName="active">Report Builder</Link></li>
                     </ul>
                 </header>
-                <div className="container-fluid">
+                <div>
                     {this.props.children}
                 </div>
             </div>

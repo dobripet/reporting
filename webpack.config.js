@@ -38,6 +38,7 @@ module.exports = function(){
         entry: {
             app: './src/main/js/app.js',
             vendor: [
+                'lodash',
                 'whatwg-fetch',
                 'react',
                 'react-dom',

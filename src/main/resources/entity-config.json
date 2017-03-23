@@ -2,20 +2,50 @@
   "entities": [
     { "name": "tab1",
       "properties": [
-        {"name": "col1"},
-        {"name": "col2"},
-        {"name": "col3"},
-        {"name": "col4"},
-        {"name": "col5"}
+        {
+          "name": "col1",
+          "dataType": "string"
+        },
+        {
+          "name": "col2",
+          "dataType": "number"
+        },
+        {
+          "name": "col3",
+          "dataType": "date"
+        },
+        {
+          "name": "col4",
+          "dataType": "string"
+        },
+        {
+          "name": "col5",
+          "dataType": "string"
+        }
       ]
     },
     { "name": "tab2",
       "properties": [
-        {"name": "col21"},
-        {"name": "col22"},
-        {"name": "col23"},
-        {"name": "col24"},
-        {"name": "col25"}
+        {
+          "name": "col21",
+          "dataType": "string"
+        },
+        {
+          "name": "col22",
+          "dataType": "number"
+        },
+        {
+          "name": "col23",
+          "dataType": "date"
+        },
+        {
+          "name": "col24",
+          "dataType": "string"
+        },
+        {
+          "name": "col25",
+          "dataType": "string"
+        }
       ]
     }
   ]
