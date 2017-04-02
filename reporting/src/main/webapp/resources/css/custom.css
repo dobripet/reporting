@@ -1,0 +1,48 @@
+.nav-tabs > li > a.active,
+.nav-tabs > li > a.active:hover,
+.nav-tabs > li > a.active:focus {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 3px solid #000000;
+}
+.horizontal-container {
+    flex: 1 100%;
+    display: flex;
+    flex-direction: row;
+}
+.vertical-container {
+    flex: 1 100%;
+    display: flex;
+    flex-direction: column;
+}
+.menu-section {
+    height: 50px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+}
+.entity-section {
+    height: 800px;
+    max-height: 90vh;
+    margin: 5px;
+    padding: 5px;
+    width: 500px;
+    border: 1px solid;
+    overflow: auto;
+}
+.column-section {
+    height: 600px;
+    max-height: 70vh;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+    overflow: auto;
+}
+
+.condition-section {
+    height: 100px;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+}

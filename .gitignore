@@ -21,3 +21,11 @@ vendor.bundle.js
 
 #Node
 node_modules/
+
+#Internal config
+reporting-config.json
+db.html
+tables/
+tablegroups/
+schemas/
+inttables/
