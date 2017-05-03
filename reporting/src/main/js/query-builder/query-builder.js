@@ -11,6 +11,8 @@ export default class QueryBuilder extends React.Component{
         super(props);
     }
     render() {
+
+        //<ConditionContainer />
         return (
             <div className="vertical-container">
                 <MenuContainer />
@@ -18,7 +20,6 @@ export default class QueryBuilder extends React.Component{
                     <EntityContainer />
                     <div className="vertical-container">
                         <ColumnContainer />
-                        <ConditionContainer />
                     </div>
                 </div>
             </div>

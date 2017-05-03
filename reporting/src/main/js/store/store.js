@@ -6,6 +6,7 @@ import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 import createPromise from 'redux-promise-middleware'
 import reducer from '../reducer/reducer'
+import errorMiddleware from '../middleware/error'
 /*
 const isPromise = (value) => {
     if (value !== null && typeof value === 'object') {
@@ -26,8 +27,9 @@ const customErrorMiddleware = store => next => action => {
         });
 };*/
 const middleware = applyMiddleware(
-    //thunk,
+    thunk,
     //customErrorMiddleware,
+    errorMiddleware,
     createPromise(),
     createLogger()
 );

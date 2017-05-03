@@ -4,11 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.zcu.fav.kiv.dobripet</groupId>
+    <groupId>cz.zcu.fav.kiv.dobripet.reporting</groupId>
     <artifactId>cfg-generator</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>0.9.7</version>
+        </dependency>
+
         <!-- XPATH -->
         <dependency>
             <groupId>org.jsoup</groupId>

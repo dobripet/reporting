@@ -10,8 +10,11 @@ import java.util.Map;
  */
 public class Entity {
     private String name = "";
-    private List<Property> properties = new ArrayList<Property>();
-    private Map<String, ForeignKey> foreignKeys = new HashMap<String,ForeignKey>();
+    private String schemaUrl = "";
+    private String tableUrl = "";
+    private Map<String, Property> properties = new HashMap<String, Property>();
+    private Map<String, List<ForeignKey>> referenceMap = new HashMap<String, List<ForeignKey>>();
+    private Map<String, List<ForeignKey>> referredByMap = new HashMap<String, List<ForeignKey>>();
 
     public String getName() {
         return name;
@@ -21,19 +24,43 @@ public class Entity {
         this.name = name;
     }
 
-    public List<Property> getProperties() {
+    public String getSchemaUrl() {
+        return schemaUrl;
+    }
+
+    public void setSchemaUrl(String schemaUrl) {
+        this.schemaUrl = schemaUrl;
+    }
+
+    public String getTableUrl() {
+        return tableUrl;
+    }
+
+    public void setTableUrl(String tableUrl) {
+        this.tableUrl = tableUrl;
+    }
+
+    public Map<String, Property> getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Property> properties) {
+    public void setProperties(Map<String, Property> properties) {
         this.properties = properties;
     }
 
-    public Map<String, ForeignKey> getForeignKeys() {
-        return  foreignKeys;
+    public Map<String, List<ForeignKey>> getReferenceMap() {
+        return referenceMap;
     }
 
-    public void setForeignKeys(Map<String, ForeignKey>  foreignKeys) {
-        this.foreignKeys =  foreignKeys;
+    public void setReferenceMap(Map<String, List<ForeignKey>> referenceMap) {
+        this.referenceMap = referenceMap;
+    }
+
+    public Map<String, List<ForeignKey>> getReferredByMap() {
+        return referredByMap;
+    }
+
+    public void setReferredByMap(Map<String, List<ForeignKey>> referredByMap) {
+        this.referredByMap = referredByMap;
     }
 }

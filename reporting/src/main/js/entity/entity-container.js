@@ -3,16 +3,20 @@
  */
 import { connect } from 'react-redux';
 import EntitySection from './entity-section';
-import { fetchEntityList, searchEntityList } from './entity-actions'
+import { fetchEntityList, searchEntityList, getEntityRowCount, getEntityPropertyStats } from './entity-actions'
 import { addPropertiesToColumnList } from '../column/column-actions'
 
 const mapStateToProps = (state) =>{
+    console.log("mapuju entities na ", state.entity);
     return {
-        entities: state.entity.filteredEntityList,
+        entities: state.entity.entities,
         loaded:  state.entity.loaded,
         loading:  state.entity.loading,
         error:  state.entity.error,
-        search: state.entity.search
+        search: state.entity.search,
+        statsLoading: state.entity.statsLoading,
+        statsLoaded: state.entity.statsLoaded,
+        statsError: state.entity.statsError
     }
 };
 const mapDispatchToProps = (dispatch) =>{
@@ -25,6 +29,12 @@ const mapDispatchToProps = (dispatch) =>{
         },
         addPropertiesToColumnList: (entity, properties) =>{
             dispatch(addPropertiesToColumnList(entity, properties))
+        },
+        getEntityRowCount: (name) =>{
+            dispatch(getEntityRowCount(name))
+        },
+        getEntityPropertyStats: (entityName, propertyName) =>{
+            dispatch(getEntityPropertyStats(entityName, propertyName))
         }
     }
 };

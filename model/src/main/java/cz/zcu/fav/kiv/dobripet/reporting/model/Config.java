@@ -1,18 +1,34 @@
 package cz.zcu.fav.kiv.dobripet.reporting.model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Petr on 3/15/2017.
  */
 public class Config {
-    private List<Entity> entities;
+    private Map<String, Entity> entities;
 
-    public List<Entity> getEntities() {
+    public Map<String, Entity> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Entity> entities) {
+    public void setEntities(Map<String, Entity> entities) {
         this.entities = entities;
+    }
+
+    /**
+     * Add to url params of entities the root url of documentation
+     * @param rootUrl root url where db.html is found
+     */
+    public void initializeDocumentationUrl(String rootUrl){
+        for(Entity entity : entities.values()){
+            if(entity.getSchemaUrl().length() > 0){
+                entity.setSchemaUrl(rootUrl+entity.getSchemaUrl());
+            }
+            if(entity.getTableUrl().length() > 0){
+                entity.setTableUrl(rootUrl+entity.getTableUrl());
+            }
+        }
     }
 }

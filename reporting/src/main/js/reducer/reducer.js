@@ -10,6 +10,6 @@ import menu from '../menu/menu-reducer'
 export default combineReducers({
     entity,
     column,
-    condition,
+    //condition,
     menu
 });
