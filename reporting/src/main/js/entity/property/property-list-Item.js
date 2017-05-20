@@ -71,7 +71,6 @@ export default class PropertyListItem extends React.Component{
         if(this.state.showStatsTooltip){
             stats = <PropertyStatsTooltip property={this.props.property} />;
         }
-        console.log(this.props.getEntityRowCount);
         if(this.state.showStatsModal){
             stats = <PropertyStatsModal property={this.props.property} onClose={this.handleCloseModal} getEntityPropertyStats={this.props.getEntityPropertyStats}/>;
         }

@@ -6,7 +6,9 @@ import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.StatisticHeaderQu
 import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.StatisticsQueryRow;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.DateType;
 import org.hibernate.type.LongType;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.NoResultException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,6 +150,46 @@ public class StatisticsDAOImpl implements StatisticsDAO {
                     setResultSetMapping("StatisticHeaderQueryRow").getSingleResult();
         }catch(NoResultException e){
             log.error("getConstraintsMapping failed due NoResultException", e);
+            return null;
+        }
+    }
+
+    @Override
+    public Object getMinOfProperty(String entityName, String propertyName) {
+        String entitySchemedName = schemaName+"."+entityName;
+        String query = "SELECT MIN(p."+propertyName+") AS min FROM "+entitySchemedName+" p";
+        try{
+            return getSession().createNativeQuery(query)
+                    .addScalar("min")
+                    .getSingleResult();
+        }catch(NoResultException e){
+            log.error("getMinOfProperty failed due NoResultException", e);
+            return null;
+        }
+    }
+    @Override
+    public Object getMaxOfProperty(String entityName, String propertyName) {
+        String entitySchemedName = schemaName+"."+entityName;
+        String query = "SELECT MAX(p."+propertyName+") AS max FROM "+entitySchemedName+" p";
+        try{
+            return getSession().createNativeQuery(query)
+                    .addScalar("max")
+                    .getSingleResult();
+        }catch(NoResultException e){
+            log.error("getMaxOfProperty failed due NoResultException", e);
+            return null;
+        }
+    }
+    @Override
+    public Object getAvgOfProperty(String entityName, String propertyName) {
+        String entitySchemedName = schemaName+"."+entityName;
+        String query = "SELECT AVG(p."+propertyName+") AS avg FROM "+entitySchemedName+" p";
+        try{
+            return getSession().createNativeQuery(query)
+                    .addScalar("avg")
+                    .getSingleResult();
+        }catch(NoResultException e){
+            log.error("getAvgOfProperty failed due NoResultException", e);
             return null;
         }
     }

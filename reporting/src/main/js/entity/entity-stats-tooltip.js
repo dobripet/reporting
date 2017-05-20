@@ -12,16 +12,36 @@ export default class EntityStatsTooltip extends React.Component {
         this.props.getEntityRowCount(this.props.entity.name);
     }
     render(){
-        // od referred by list
+        const {
+            entity
+        } = this.props;
+        // referred by list
         let referred = "No tables found.";
-        if(this.props.entity.referredByMap && Object.keys(this.props.entity.referredByMap).length > 0 ){
-            let rows = Object.keys(this.props.entity.referredByMap).map(tableName => <li key={tableName} >{tableName}</li> );
+        let keys = [];
+        if(entity.referredByMap && (keys = Object.keys(entity.referredByMap)).length > 0 ){
+            let rows = [];
+            //mapping with max length 3
+            for (let i = 0; i < keys.length; i++){
+                if(i == 3){
+                    rows.push( <li key="...">...</li>);
+                    break;
+                }
+                rows.push( <li key={keys[i]}>{keys[i]}</li>);
+            }
             referred = <ul>{rows}</ul>;
         }
-        // do reference list
+        // reference list
         let reference = "No tables found.";
-        if(this.props.entity.referenceMap && Object.keys(this.props.entity.referenceMap).length > 0 ){
-            let rows = Object.keys(this.props.entity.referenceMap).map(tableName => <li key={tableName} >{tableName}</li> );
+        if(entity.referenceMap && (keys = Object.keys(entity.referenceMap)).length > 0 ){
+            let rows = [];
+            //mapping with max length 3
+            for (let i = 0; i < keys.length; i++){
+                if(i == 3){
+                    rows.push( <li key="...">...</li>);
+                    break;
+                }
+                rows.push( <li key={keys[i]}>{keys[i]}</li>);
+            }
             reference = <ul>{rows}</ul>;
         }
         console.log(this.props.entity);

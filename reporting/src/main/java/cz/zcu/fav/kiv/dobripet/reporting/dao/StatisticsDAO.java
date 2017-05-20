@@ -5,6 +5,8 @@ import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.HistogramQueryRow
 import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.StatisticHeaderQueryRow;
 import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.StatisticsQueryRow;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,4 +18,7 @@ public interface StatisticsDAO {
     List<ConstraintQueryRow> getConstraintsList();
     List<HistogramQueryRow> getHistogram(String entityName, String statisticName);
     StatisticHeaderQueryRow getStatsHeader(String entityName, String statisticName);
+    Object getMinOfProperty(String entityName, String propertyName);
+    Object getMaxOfProperty(String entityName, String propertyName);
+    Object getAvgOfProperty(String entityName, String propertyName);
 }

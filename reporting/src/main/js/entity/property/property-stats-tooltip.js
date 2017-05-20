@@ -24,14 +24,17 @@ export default class PropertyStatsTooltip extends React.Component {
             let rows = Object.keys(this.props.entity.referenceMap).map(tableName => <li key={tableName} >{tableName}</li> );
             reference = <ul>{rows}</ul>;
         }*/
+        const {
+            property
+        } = this.props;
         console.log(this.props.entity);
         let notNull = null;
-        if(this.props.property.notNull){
-            notNull = "Not Null"
+        if(property.notNull){
+            notNull = "Not Null";
         }
         let enumConstraints = null;
-        if(this.props.property.enumConstraints){
-            let values = this.props.property.enumConstraints.map(value => <li>{value}</li>);
+        if(property.enumConstraints){
+            let values = property.enumConstraints.map((value, i) => <li key={i}>{value}</li>);
             enumConstraints = <tr>
                 <td>Allowed values: </td>
                 <td><ul>{values}</ul></td>
@@ -40,13 +43,13 @@ export default class PropertyStatsTooltip extends React.Component {
         return (
             <div className="entity-tooltip-container">
                 <div className="entity-tooltip">
-                    <h3>{this.props.property.name}</h3>
+                    <h3>{property.name}</h3>
                     {notNull}
                     <table>
                         <tbody>
                         <tr>
                             <td>Type:</td>
-                            <td>{this.props.property.dataType}</td>
+                            <td>{property.dataType}</td>
                         </tr>
                         {enumConstraints}
                         <tr>

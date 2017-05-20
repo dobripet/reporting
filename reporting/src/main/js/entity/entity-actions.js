@@ -99,10 +99,3 @@ export function getEntityPropertyStats(entityName, propertyName){
             })
     })
 }
-
-
-const fetchWrapper = (url) => {
-    return fetch(url)
-        .then(response => response.ok ? response.json() : response.json()
-                .then(err => Promise.reject(err)))
-};

@@ -1,4 +1,5 @@
 import React from 'react'
+import {BarChart, LineChart, XAxis, YAxis,CartesianGrid, Legend, Bar, Line, Tooltip } from 'recharts'
 export default class PropertyStatsModal extends React.Component {
     constructor(props) {
         super(props);
@@ -64,40 +65,123 @@ export default class PropertyStatsModal extends React.Component {
         if(this.props.entity.tableUrl) {
             tableUrl = <tr><td>Table: </td><td><a href={this.props.entity.tableUrl}>{this.props.entity.tableUrl}</a></td></tr>
         }*/
-        let notNull = null;
-        if(this.props.property.notNull){
-           notNull = "Not Null"
+        const {
+            notNull,
+            statistic,
+            enumConstraints
+        } = this.props.property;
+
+        console.log("co se deje", this.props.property);
+        let notNullSpan = null;
+        let nullPercentageRow = null;
+        if(notNull){
+            notNullSpan = <span>Not Null</span>;
+        }else {
+            if(statistic) {
+                nullPercentageRow = <tr>
+                    <td>Null Percentage:</td>
+                    <td>{statistic.nullPercentage}%</td>
+                </tr>;
+            }
         }
-        let enumConstraints = null;
-        if(this.props.property.enumConstraints){
-            let values = this.props.property.enumConstraints.map(value => <li>{value}</li>);
-            enumConstraints = <tr>
+        let enumConstraintsRow = null;
+        if(enumConstraints){
+            let values = enumConstraints.map(value => <li key={value}>{value}</li>);
+            enumConstraintsRow = <tr>
                     <td>Allowed values: </td>
                     <td><ul>{values}</ul></td>
                 </tr>
+        }
+        let histogram = null;
+        let rowsSampledRow = null;
+        let minRow = null;
+        let maxRow = null;
+        let avgRow = null;
+        let trueFalseRow = null;
+        if(statistic) {
+            if (statistic.histogram) {
+                /*let values = statistic.histogram.map(record => <span
+                    key={record.interval}> {record.interval} {record.value}</span>);*/
+                if(statistic.histogram.length < 20) {
+                    let width = statistic.histogram.length * 40 +100;
+                    histogram = <BarChart width={width} height={250} data={statistic.histogram}>
+                        <XAxis dataKey="name"/>
+                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        /*<Tooltip />
+                         <Legend />*/
+                        <Bar dataKey="value" fill="#8884d8"/>
+                    </BarChart>
+                } else{
+                    let width = statistic.histogram.length * 5 +100;
+                    histogram = <LineChart width={width} height={250} data={statistic.histogram}>
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" />
+                       /* <Tooltip />
+                        <Legend />*/
+                        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                    </LineChart>
+                }
+            }
+            console.log(statistic);
+            if(statistic.rowsSampled) {
+                rowsSampledRow = <tr>
+                    <td>Rows Sampled:</td>
+                    <td>{statistic.rowsSampled}</td>
+                </tr>;
+            }
+            //checks because 0 or false are possible
+            if(typeof(statistic.min) != 'undefined' && statistic.min != null) {
+                minRow = <tr>
+                    <td>Minimal value:</td>
+                    <td>{statistic.min}</td>
+                </tr>;
+            }
+            if(typeof(statistic.max) != 'undefined' && statistic.max != null) {
+                maxRow = <tr>
+                    <td>Maximal value:</td>
+                    <td>{statistic.max}</td>
+                </tr>;
+            }
+            if(typeof(statistic.avg) != 'undefined' && statistic.avg != null) {
+                avgRow = <tr>
+                    <td>Average value:</td>
+                    <td>{statistic.avg}</td>
+                </tr>;
+            }
+            if(typeof(statistic.truePercentage) != 'undefined' && statistic.truePercentage != null) {
+                trueFalseRow = <tr>
+                    <td>True - false:</td>
+                    <td>{statistic.truePercentage}% - {statistic.falsePercentage}%</td>
+                </tr>;
+            }
         }
         return (
             <div className="entity-modal-container">
                 <div className="entity-modal">
                     <h3>{this.props.property.name}</h3>
-                    {notNull}
+                    {notNullSpan}
                     <table>
                         <tbody>
-                        <tr>
-                            <td>Count:</td>
-                            <td>{this.props.rowCount}</td>
-                        </tr>
                         <tr>
                             <td>Type:</td>
                             <td>{this.props.property.dataType}</td>
                         </tr>
-                        {enumConstraints}
+                        {rowsSampledRow}
+                        {nullPercentageRow}
+                        {enumConstraintsRow}
+                        {minRow}
+                        {maxRow}
+                        {avgRow}
+                        {trueFalseRow}
                         <tr>
                             <td>Tags:</td>
                             <td>TODO</td>
                         </tr>
                         </tbody>
                     </table>
+                    {histogram}
                     <button onClick={this.handleClose}>Close</button>
                 </div>
             </div>

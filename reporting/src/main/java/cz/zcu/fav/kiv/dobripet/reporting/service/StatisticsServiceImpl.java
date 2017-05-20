@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -57,7 +60,15 @@ public class StatisticsServiceImpl implements StatisticsService {
                     if(property != null) {
                         property.setStatisticName(row.getStatisticName());
                         System.out.printf("co se deje");
-                        getStatistics(entity.getName(), row.getColumnName());
+                        /*if(property.getDataType().equals("datetime")){
+                            System.out.println("MINIMUM "+statisticsDAO.getMinDateTime(entity.getName(), property.getName()));
+
+                        }
+                        if(property.getDataType().equals("number")){
+                            System.out.println("MINIMUM NUMBER "+statisticsDAO.getMinNumber(entity.getName(), property.getName()));
+
+                        }*/
+                        //getStatistics(entity.getName(), row.getColumnName());
                     }
                     //System.out.println(mapping.get(property.getName()));
                     /*if(mapping.get(property.getName()) == null){
@@ -137,33 +148,75 @@ public class StatisticsServiceImpl implements StatisticsService {
         float totalNull = 0;
         System.out.println("wtf");
         List<HistogramQueryRow> rows = statisticsDAO.getHistogram(entityName,statisticsName);
+        StatisticHeaderQueryRow header = statisticsDAO.getStatsHeader(entityName, statisticsName);
+        float nullPercentage = 0;
+        float trues = 0;
+        float falses = 0;
+        List<HistogramRecord> histogram = new ArrayList<>();
+        //workaround to get instant from statistic datetime, DBMS returns dates in this format 'Dec 13 2015  8:20PM'
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy h:mma");
+        LocalDateTime updated = LocalDateTime.parse(header.getUpdated().replace("  ", " "), formatter);
+        System.out.println(updated);
         if(rows != null && rows.size() > 0) {
-            //null row in histogram
+            //process histogram
+            float nullCount = 0;
             for (HistogramQueryRow row : rows) {
-                if(row.getRangeHiKey() == null || row.getRangeHiKey().equalsIgnoreCase("null")){
-                    System.out.println("je NULL " +row.getRangeHiKey());
-                    StatisticHeaderQueryRow header = statisticsDAO.getStatsHeader(entityName, statisticsName);
-                    System.out.println("header " + header.getName());
+                //count null rows
+                if (row.getRangeHiKey() == null || row.getRangeHiKey().equalsIgnoreCase("null")) {
+                    nullCount+=row.getEqRows();
+                    System.out.println("je NULL " + row.getEqRows());
+                    //StatisticHeaderQueryRow header = statisticsDAO.getStatsHeader(entityName, statisticsName);
                 }
-                System.out.println(row.getRangeHiKey());
+                //count true and false rows
+                if( row.getRangeHiKey()!= null) {
+                    if (row.getRangeHiKey().equals("1")) {
+                        trues = row.getEqRows();
+                    }
+                    if (row.getRangeHiKey().equals("0")) {
+                        falses = row.getEqRows();
+                    }
+                }
+                //histogram record value is counted as rangeRows + eqRows
+                histogram.add(new HistogramRecord(row.getRangeHiKey(),row.getEqRows()+row.getRangeRows()));
             }
+            //percentage of null records
+            nullPercentage = 100*nullCount/header.getRows();
+
         }
-        /*if(rows != null && rows.size() < 20){
-            for(HistogramQueryRow row : rows){
-                System.out.println(row);
-            }
+        //usable size of histogram
+        /*if(histogram.size() > 20){
+            histogram = null;
         }*/
-        //jako histogram vysku chci secist rangerow a eqrow
-        if(property.getDataType().equals("numeric")){
-
+        log.warn("ROWS SAMPLED "+header.getRowsSampled() + " ROWS " +header.getRows());
+        //resolve binaries  or strings
+        if(property.getDataType().equals("binary") || property.getDataType().equals("string")){
+            //histogram only for constrained properties
+            if(property.getEnumConstraints() == null || property.getEnumConstraints().size() == 0){
+                histogram = null;
+            }
+            return new PropertyStatistics(nullPercentage, header.getRowsSampled(), updated, histogram);
         }
-
-        if(property.getDataType().equals("string")){
-
+        //resolve booleans
+        if(property.getDataType().equals("bool")){
+            //count percentages
+            float truePercentage = 0;
+            float falsePercentage = 0;
+            if(trues != 0 || falses != 0){
+                truePercentage = 100 * trues / (trues + falses);
+                falsePercentage = 100 * falses / (trues + falses);
+            }
+            return new BoolPropertyStatistic(nullPercentage, header.getRowsSampled(), updated, histogram, truePercentage, falsePercentage);
         }
-
+        //resolve dates
+        Object min = statisticsDAO.getMinOfProperty(entityName, propertyName);
+        Object max = statisticsDAO.getMaxOfProperty(entityName, propertyName);
         if(property.getDataType().equals("datetime")){
-
+            return new DateTimePropertyStatistics(nullPercentage, header.getRowsSampled(), updated, histogram, min, max);
+        }
+        //resolve numbers
+        Object avg = statisticsDAO.getAvgOfProperty(entityName,propertyName);
+        if(property.getDataType().equals("number")){
+            return new NumberPropertyStatistics(nullPercentage,header.getRowsSampled(), updated, histogram, min, max, avg);
         }
         return null;
     }

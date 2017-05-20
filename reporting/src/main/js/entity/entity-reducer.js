@@ -28,7 +28,7 @@ const addRowCount = (entities, payload) => {
     return entities;
 };*/
 const addPropertyStats = (entities, payload) => {
-    entities[payload.entityName].properties[payload.propertyName].stats = payload.statistics;
+    entities[payload.entityName].properties[payload.propertyName].statistic = payload.statistic;
     return entities;
 };
 export default typeToReducer({

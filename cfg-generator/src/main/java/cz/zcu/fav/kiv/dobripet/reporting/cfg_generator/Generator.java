@@ -24,6 +24,8 @@ import org.xml.sax.InputSource;
 import us.codecraft.xsoup.Xsoup;
 
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -57,13 +59,11 @@ public class Generator {
     }
 
     public static void main(String[] args) {
-        String s = "([Status] is null or ([Status] = 'E' or [Status] = 'D'))";
-        Map<String, List<String>> parsed = parseExpression(s);
-        for(String column : parsed.keySet()){
-            for(String value : parsed.get(column)){
-                System.out.println("column: " +column + " value: " +value);
-            }
-        }
+        String cas = "Dec 13 2015  1:20PM".replace("  "," ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy h:mma");
+        LocalDateTime dateTime = LocalDateTime.parse(cas, formatter);
+        System.out.println(dateTime);
+    }
 
         //try {
             //Expression expr = CCJSqlParserUtil.parseExpression(s);
@@ -374,4 +374,4 @@ public class Generator {
 //        }
 //        return true;
 //    };
-}
+

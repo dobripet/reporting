@@ -40,6 +40,7 @@ module.exports = function(){
             vendor: [
                 'lodash',
                 'whatwg-fetch',
+                'recharts',
                 'react',
                 'react-dom',
                 'react-redux',
