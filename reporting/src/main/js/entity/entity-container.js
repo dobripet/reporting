@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) =>{
             dispatch(searchEntityList(text))
         },
         addPropertiesToColumnList: (entity, properties) =>{
-            dispatch(addPropertiesToColumnList(entity, properties))
+            dispatch(addPropertiesToColumnList(entity, properties));
         },
         getEntityRowCount: (name) =>{
             dispatch(getEntityRowCount(name))

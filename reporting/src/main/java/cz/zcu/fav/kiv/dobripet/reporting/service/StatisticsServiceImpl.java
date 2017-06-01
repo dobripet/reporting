@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -155,7 +157,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<HistogramRecord> histogram = new ArrayList<>();
         //workaround to get instant from statistic datetime, DBMS returns dates in this format 'Dec 13 2015  8:20PM'
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy h:mma");
-        LocalDateTime updated = LocalDateTime.parse(header.getUpdated().replace("  ", " "), formatter);
+        LocalDateTime updatedLDT = LocalDateTime.parse(header.getUpdated().replace("  ", " "), formatter);
+        Timestamp updated = Timestamp.valueOf(updatedLDT);
         System.out.println(updated);
         if(rows != null && rows.size() > 0) {
             //process histogram

@@ -7,15 +7,11 @@
     <groupId>cz.zcu.fav.kiv.dobripet.reporting</groupId>
     <artifactId>cfg-generator</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+        <jdk.version>1.8</jdk.version>
+    </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.github.jsqlparser</groupId>
-            <artifactId>jsqlparser</artifactId>
-            <version>0.9.7</version>
-        </dependency>
-
         <!-- XPATH -->
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -40,4 +36,17 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

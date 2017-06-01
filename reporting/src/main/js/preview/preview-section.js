@@ -23,6 +23,10 @@ export default class PreviewSection extends React.Component{
         this.props.setAggregateFunction(columnIndex, aggregateFunction);
     }*/
     render() {
+        const{
+            rows,
+            loading
+        } = this.props
         /*let columns = <span>Add columns to build query!</span>;
         if(this.props.columns.length > 0) {
             columns = this.props.columns.map((column, index) => <ColumnListItem
@@ -46,14 +50,17 @@ export default class PreviewSection extends React.Component{
                     </tbody>
                 </table>
         }*/
+        console.log(rows);
         return (
             <div className="preview-section">
-                <h1>TODO preview section</h1>
+                <Loader loaded={!loading}>
+                    <h1>TODO preview section</h1>
+                </Loader>
             </div>
 
         );
     }
 }
-ColumnSection.PropTypes={
-    columns: React.PropTypes.array.isRequired
+PreviewSection.PropTypes={
+    rows: React.PropTypes.array.isRequired
 };

@@ -1,13 +1,16 @@
 package cz.zcu.fav.kiv.dobripet.reporting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Petr on 3/15/2017.
- */
 public class Config {
     private Map<String, Entity> entities;
+
+    @JsonIgnore
+    private Map<Pair<String, String>, List<List<String>>> paths;
 
     public Map<String, Entity> getEntities() {
         return entities;
@@ -15,6 +18,14 @@ public class Config {
 
     public void setEntities(Map<String, Entity> entities) {
         this.entities = entities;
+    }
+
+    public Map<Pair<String, String>, List<List<String>>> getPaths() {
+        return paths;
+    }
+
+    public void setPaths(Map<Pair<String, String>, List<List<String>>> paths) {
+        this.paths = paths;
     }
 
     /**

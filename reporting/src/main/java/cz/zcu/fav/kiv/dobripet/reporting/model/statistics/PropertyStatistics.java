@@ -2,6 +2,7 @@ package cz.zcu.fav.kiv.dobripet.reporting.model.statistics;
 
 //import java.time.LocalDateTime;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,10 +12,10 @@ import java.util.List;
 public class PropertyStatistics {
     protected float nullPercentage;
     protected long rowsSampled;
-    protected LocalDateTime updated;
+    protected Timestamp updated;
     protected List<HistogramRecord> histogram;
 
-    public PropertyStatistics(float nullPercentage, long rowsSampled, LocalDateTime updated, List<HistogramRecord> histogram) {
+    public PropertyStatistics(float nullPercentage, long rowsSampled, Timestamp updated, List<HistogramRecord> histogram) {
         this.nullPercentage = nullPercentage;
         this.rowsSampled = rowsSampled;
         this.updated = updated;
@@ -37,11 +38,11 @@ public class PropertyStatistics {
         this.rowsSampled = rowsSampled;
     }
 
-    public LocalDateTime getUpdated() {
+    public Timestamp getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
+    public void setUpdated(Timestamp updated) {
         this.updated = updated;
     }
 

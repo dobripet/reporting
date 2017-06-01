@@ -1,5 +1,6 @@
 package cz.zcu.fav.kiv.dobripet.reporting.model.statistics;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class BoolPropertyStatistic extends PropertyStatistics {
     private float truePercentage;
     private float falsePercentage;
 
-    public BoolPropertyStatistic(float nullPercentage, long rowsSampled, LocalDateTime updated, List<HistogramRecord> histogram, float truePercentage, float falsePercentage) {
+    public BoolPropertyStatistic(float nullPercentage, long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, float truePercentage, float falsePercentage) {
         super(nullPercentage, rowsSampled, updated, histogram);
         this.truePercentage = truePercentage;
         this.falsePercentage = falsePercentage;

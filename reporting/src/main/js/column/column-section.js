@@ -1,6 +1,7 @@
 import React from 'react'
 import Loader from 'react-loader'
 import ColumnListItem from './column-list-item'
+import JoinModal from './join-modal'
 
 
 export default class ColumnSection extends React.Component{
@@ -24,9 +25,14 @@ export default class ColumnSection extends React.Component{
         this.props.setAggregateFunction(columnIndex, aggregateFunction);
     }
     render() {
-        let columns = <span>Add columns to build query!</span>;
-        if(this.props.columns.length > 0) {
-            columns = this.props.columns.map((column, index) => <ColumnListItem
+        const {
+            columns,
+            showJoinModal,
+            joinParameters
+        } = this.props;
+        let columnsTable = <span>Add columns to build query!</span>;
+        if(columns.length > 0) {
+            columnsTable = columns.map((column, index) => <ColumnListItem
                 key={index}
                 column={column}
                 index={index}
@@ -34,7 +40,7 @@ export default class ColumnSection extends React.Component{
                 onEditTitle={this.handleEditTitle}
                 onSetAggregateFunction={this.handleSetAggregateFunction}
                 />);
-            columns = <table>
+            columnsTable = <table>
                     <thead>
                         <tr>
                             <th>Column</th>
@@ -43,14 +49,19 @@ export default class ColumnSection extends React.Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {columns}
+                        {columnsTable}
                     </tbody>
                 </table>
+        }
+        let joinModal = null;
+        if(typeof(showJoinModal) != 'undefined' && showJoinModal != null){
+            joinModal = <JoinModal joinParameters ={joinParameters[showJoinModal]} />
         }
         return (
             <div className="column-section">
                 <Loader loaded={!this.props.loading}>
-                    {columns}
+                    {joinModal}
+                    {columnsTable}
                 </Loader>
             </div>
 
@@ -58,5 +69,6 @@ export default class ColumnSection extends React.Component{
     }
 }
 ColumnSection.PropTypes={
-    columns: React.PropTypes.array.isRequired
+            columns: React.PropTypes.array.isRequired,
+            joinParameters: React.PropTypes.array.isRequired
 };

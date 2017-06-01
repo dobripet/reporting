@@ -1,5 +1,6 @@
 package cz.zcu.fav.kiv.dobripet.reporting.model.statistics;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class DateTimePropertyStatistics extends PropertyStatistics{
     protected Object min;
     protected Object max;
 
-    public DateTimePropertyStatistics(float nullPercentage, long rowsSampled, LocalDateTime updated, List<HistogramRecord> histogram, Object min, Object max) {
+    public DateTimePropertyStatistics(float nullPercentage, long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, Object min, Object max) {
         super(nullPercentage, rowsSampled, updated, histogram);
         this.min = min;
         this.max = max;

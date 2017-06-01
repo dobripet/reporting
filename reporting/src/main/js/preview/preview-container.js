@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
-import QuerySection from './query-section';
+import PreviewSection from './preview-section';
 
 const mapStateToProps = (state) =>{
     return {
-        query: state.query.query,
-        loaded:  state.query.loaded,
-        loading:  state.query.loading,
-        error:  state.query.error
+        rows: state.preview.rows,
+        loaded:  state.preview.loaded,
+        loading:  state.preview.loading,
+        error:  state.preview.error
     }
 };
 const mapDispatchToProps = (dispatch) =>{
@@ -16,4 +16,4 @@ const mapDispatchToProps = (dispatch) =>{
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(QuerySection);
+)(PreviewSection);

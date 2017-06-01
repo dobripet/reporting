@@ -1,23 +1,19 @@
 import { connect } from 'react-redux';
-import ConditionSection from './condition-section';
-import { addCondition } from './condition-actions'
+import QuerySection from './query-section';
 
 const mapStateToProps = (state) =>{
     return {
-        conditions: state.condition.conditions,
-        loaded:  state.condition.loaded,
-        loading:  state.condition.loading,
-        error:  state.condition.error
+        query: state.query.query,
+        loaded:  state.query.loaded,
+        loading:  state.query.loading,
+        error:  state.query.error
     }
 };
 const mapDispatchToProps = (dispatch) =>{
     return {
-        addCondition: () =>{
-            dispatch(addCondition())
-        }
     }
 };
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ConditionSection);
+)(QuerySection);

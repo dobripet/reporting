@@ -6,8 +6,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.zcu.fav.kiv.dobripet.reporting.configuration.ConfigValidator;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Config;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.Column;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.ColumnRequest;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.ColumnResponse;
 import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.PropertyStatistics;
+import cz.zcu.fav.kiv.dobripet.reporting.service.BuilderService;
 import cz.zcu.fav.kiv.dobripet.reporting.service.StatisticsService;
+import cz.zcu.fav.kiv.dobripet.reporting.utils.InvalidDataException;
 import cz.zcu.fav.kiv.dobripet.reporting.utils.JSONWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +28,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Petr on 3/4/2017.
@@ -39,7 +45,8 @@ public class ApiController {
     @Autowired
     private Config config;
 
-
+    @Autowired
+    private BuilderService builderService;
     /**
      * Updates config with current documentation root URL.
      * Initialize statistics.
@@ -79,6 +86,19 @@ public class ApiController {
         return JSONWrapper.wrapObjectToString("statistic", statistic);
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
+    @PostMapping("/builder/columns/")
+    public String getJoinFromColumns(@RequestBody ColumnRequest columnRequest) throws JsonProcessingException, InvalidDataException {
+        for(Column c : columnRequest.getColumns()){
+            System.out.println(c);
+        }
+        ColumnResponse columnResponse = builderService.getJoinFromColumns(columnRequest);
+        if(columnResponse.getStatus() < 0){
+            throw new InvalidDataException();
+        }
+        return JSONWrapper.wrapObjectToString("builder", columnResponse);
+    }
+
     /**
      * Handles JsonProcessingException
      * @param exception exception thrown by application
@@ -90,4 +110,19 @@ public class ApiController {
         String body = "{\"error\":\"Failed to parse object to JSON.\"}";
         return new ResponseEntity<String>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * Bad request
+     * @param exception exception thrown by application
+     * @return response with status code 400 and body with error message
+     */
+    @ExceptionHandler(value = {JsonProcessingException.class})
+    protected ResponseEntity<String> handeDataError(JsonProcessingException exception){
+        log.warn("INVALID PARAMETERS OR DATA", exception);
+        String body = "{\"error\":\"Invalid parameters or data.\"}";
+        return new ResponseEntity<String>(body, HttpStatus.BAD_REQUEST);
+    }
+
+
+
 }

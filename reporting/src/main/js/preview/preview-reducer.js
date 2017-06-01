@@ -1,7 +1,7 @@
 import { COLUMN_LIST_ADD_POST } from '../column/column-actions'
 import typeToReducer from 'type-to-reducer'
 const initialState = {
-    conditions: [],
+    rows: [],
     loading: false,
     loaded: false,
     error: null,
@@ -25,7 +25,7 @@ export default typeToReducer({
             Object.assign( {}, state, {
                 loading: false,
                 loaded: Date.now(),
-                sql: action.payload.sql
+                rows: action.payload.preview
             })
         ),
     }

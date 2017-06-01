@@ -1,7 +1,10 @@
 package cz.zcu.fav.kiv.dobripet.reporting.configuration;
 
 import cz.zcu.fav.kiv.dobripet.reporting.model.Config;
+import cz.zcu.fav.kiv.dobripet.reporting.model.Entity;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Property;
+import cz.zcu.fav.kiv.dobripet.reporting.service.BuilderService;
+import cz.zcu.fav.kiv.dobripet.reporting.utils.GraphPaths;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -28,6 +31,10 @@ public class ConfigValidator {
     @Autowired
     private SessionFactory sessionFactory;
 
+    //TODO test only
+    @Autowired
+    private BuilderService builderService;
+
     protected Session getSession() {
         return this.sessionFactory.getCurrentSession();
     }
@@ -36,7 +43,6 @@ public class ConfigValidator {
     private String databaseName;
 
     public void validate(){
-        System.out.println("Validator proc " +config);
         String queryTables = "SELECT TABLE_NAME " +
                 "FROM INFORMATION_SCHEMA.TABLES " +
                 "WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG = :databaseName";
@@ -64,7 +70,37 @@ public class ConfigValidator {
                     //remove from config
                     config.getEntities().remove(tableName);
                 }
+
+
+                //TODO smazat
+                if(config.getEntities().get(tableName) == null || config.getEntities().get(tableName).getReferenceMap() == null || config.getEntities().get(tableName).getReferredByMap() == null){
+                    continue;
+                }
+                Set<String> a = config.getEntities().get(tableName).getReferenceMap().keySet();
+                Set<String> b = config.getEntities().get(tableName).getReferredByMap().keySet();
+                for (String c : a){
+                    if(b.contains(c)){
+                        System.out.println("REKURZE " + tableName);
+                    }
+                }
+
             }
+
+            //test muj temp
+            Entity start = config.getEntities().get("Warehouse_Packages");
+            Entity end = config.getEntities().get("Positions");
+            System.out.println("priority PATH "+ builderService.getPriorityPath(start,end).toString());
+            List<List<String>>  paths = builderService.getAllPaths(start, end);
+            System.out.println("PATH COUNT " +paths.size());
+            for(List<String> path : paths){
+                System.out.println(path.toString());
+            }
+           // List<List<String>>  paths = GraphPaths.findAllPathsBetween(start,end,config);
+            //System.out.println("PATH " + GraphPaths.findShortestPath(start, end, config).toString());
+           /* for(List<String> path : paths){
+                System.out.println(path.toString());
+            }
+*/
         }catch(NoResultException e){
             log.error("validate failed due NoResultException", e);
         }

@@ -4,12 +4,14 @@
 import { combineReducers } from 'redux'
 import entity from '../entity/entity-reducer'
 import column from '../column/column-reducer'
-import condition from '../condition/condition-reducer'
+import query from '../query/query-reducer'
+import preview from '../preview/preview-reducer'
 import menu from '../menu/menu-reducer'
 
 export default combineReducers({
     entity,
     column,
-    //condition,
+    query,
+    preview,
     menu
 });

@@ -1,5 +1,6 @@
 import React from 'react'
 import {BarChart, LineChart, XAxis, YAxis,CartesianGrid, Legend, Bar, Line, Tooltip } from 'recharts'
+import {formatDateTime} from '../../utils/utils';
 export default class PropertyStatsModal extends React.Component {
     constructor(props) {
         super(props);
@@ -68,9 +69,9 @@ export default class PropertyStatsModal extends React.Component {
         const {
             notNull,
             statistic,
-            enumConstraints
+            enumConstraints,
+            dataType
         } = this.props.property;
-
         console.log("co se deje", this.props.property);
         let notNullSpan = null;
         let nullPercentageRow = null;
@@ -98,6 +99,7 @@ export default class PropertyStatsModal extends React.Component {
         let maxRow = null;
         let avgRow = null;
         let trueFalseRow = null;
+        let updated = null;
         if(statistic) {
             if (statistic.histogram) {
                 /*let values = statistic.histogram.map(record => <span
@@ -133,21 +135,36 @@ export default class PropertyStatsModal extends React.Component {
             }
             //checks because 0 or false are possible
             if(typeof(statistic.min) != 'undefined' && statistic.min != null) {
+                let min = statistic.min;
+                if(dataType === 'datetime'){
+                    min = formatDateTime(min);
+                    console.log(min);
+                }
                 minRow = <tr>
                     <td>Minimal value:</td>
-                    <td>{statistic.min}</td>
+                    <td>{min}</td>
                 </tr>;
             }
             if(typeof(statistic.max) != 'undefined' && statistic.max != null) {
+                let max= statistic.max;
+                if(dataType === 'datetime'){
+                    max = formatDateTime(max);
+                    console.log(max);
+                }
                 maxRow = <tr>
                     <td>Maximal value:</td>
-                    <td>{statistic.max}</td>
+                    <td>{max}</td>
                 </tr>;
             }
             if(typeof(statistic.avg) != 'undefined' && statistic.avg != null) {
+                let avg = statistic.avg;
+                if(dataType === 'datetime'){
+                    avg = formatDateTime(avg);
+                    console.log(avg);
+                }
                 avgRow = <tr>
                     <td>Average value:</td>
-                    <td>{statistic.avg}</td>
+                    <td>{avg}</td>
                 </tr>;
             }
             if(typeof(statistic.truePercentage) != 'undefined' && statistic.truePercentage != null) {
@@ -156,18 +173,30 @@ export default class PropertyStatsModal extends React.Component {
                     <td>{statistic.truePercentage}% - {statistic.falsePercentage}%</td>
                 </tr>;
             }
+            if(statistic.updated){
+                console.log()
+                let formattedUpdate = formatDateTime(statistic.updated);
+                console.log("UPD ", statistic.updated, formattedUpdate);
+                if(formattedUpdate) {
+                    updated = <tr>
+                        <td>Last time updated:</td>
+                        <td>{formatDateTime(statistic.updated)}</td>
+                    </tr>;
+                }
+            }
         }
         return (
-            <div className="entity-modal-container">
-                <div className="entity-modal">
+            <div className="custom-modal-container">
+                <div className="custom-modal">
                     <h3>{this.props.property.name}</h3>
                     {notNullSpan}
                     <table>
                         <tbody>
                         <tr>
                             <td>Type:</td>
-                            <td>{this.props.property.dataType}</td>
+                            <td>{dataType}</td>
                         </tr>
+                        {updated}
                         {rowsSampledRow}
                         {nullPercentageRow}
                         {enumConstraintsRow}

@@ -1,9 +1,6 @@
 package cz.zcu.fav.kiv.dobripet.reporting.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Petr on 3/15/2017.
@@ -62,5 +59,23 @@ public class Entity {
 
     public void setReferredByMap(Map<String, List<ForeignKey>> referredByMap) {
         this.referredByMap = referredByMap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return Objects.equals(name, entity.name) &&
+                Objects.equals(schemaUrl, entity.schemaUrl) &&
+                Objects.equals(tableUrl, entity.tableUrl) &&
+                Objects.equals(properties, entity.properties) &&
+                Objects.equals(referenceMap, entity.referenceMap) &&
+                Objects.equals(referredByMap, entity.referredByMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, schemaUrl, tableUrl, properties, referenceMap, referredByMap);
     }
 }

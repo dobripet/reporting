@@ -65,8 +65,8 @@ export default class EntityStatsModal extends React.Component {
             tableUrl = <tr><td>Table: </td><td><a href={this.props.entity.tableUrl}>{this.props.entity.tableUrl}</a></td></tr>
         }
         return (
-            <div className="entity-modal-container">
-                <div className="entity-modal">
+            <div className="custom-modal-container">
+                <div className="custom-modal">
                     <h3>{this.props.entity.name}</h3>
                     <table>
                         <tbody>

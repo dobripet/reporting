@@ -2,7 +2,7 @@ import React from 'react'
 import Loader from 'react-loader'
 
 
-export default class PreviewSection extends React.Component{
+export default class QuerySection extends React.Component{
     constructor(props) {
         super(props);
         // bindings
@@ -23,6 +23,10 @@ export default class PreviewSection extends React.Component{
         this.props.setAggregateFunction(columnIndex, aggregateFunction);
     }*/
     render() {
+        const {
+            query,
+            loading
+        } = this.props;
         /*let columns = <span>Add columns to build query!</span>;
         if(this.props.columns.length > 0) {
             columns = this.props.columns.map((column, index) => <ColumnListItem
@@ -46,14 +50,17 @@ export default class PreviewSection extends React.Component{
                     </tbody>
                 </table>
         }*/
+        console.log(query);
         return (
-            <div className="preview-section">
-                <h1>TODO query section</h1>
+            <div className="query-section">
+                <Loader loaded={!loading}>
+                    <h1>TODO query section</h1>
+                </Loader>
             </div>
 
         );
     }
 }
-PreviewSection.PropTypes={
-    columns: React.PropTypes.array.isRequired
+QuerySection.PropTypes={
+    query: React.PropTypes.string.isRequired
 };

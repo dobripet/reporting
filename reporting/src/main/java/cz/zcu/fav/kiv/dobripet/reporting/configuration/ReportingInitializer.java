@@ -8,6 +8,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 
 /**
  * Created by Petr on 4/27/2017.
@@ -36,10 +37,14 @@ public class ReportingInitializer{
     public void contextRefreshedEvent(ContextRefreshedEvent event){
         if(event.getApplicationContext().getParent() == null) {
             System.out.println("stats " + statisticsService);
+            //init or clear paths
+            config.setPaths(new HashMap<>());
+            //init uris
             config.initializeDocumentationUrl(documentationUrl);
+            //do validation to database
             configValidator.validate();
+            //init statistics
             statisticsService.init();
-            System.out.println("proc je sakra spusten 2x");
         }
     }
 }

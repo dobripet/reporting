@@ -34,12 +34,28 @@
 .column-section {
     height: 600px;
     max-height: 70vh;
+    width: 600px;
     padding: 5px;
     margin: 5px;
     border: 1px solid;
     overflow: auto;
 }
-
+.preview-section {
+    height: 200px;
+    max-height: 20vh;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+    overflow: auto;
+}
+.query-section {
+    height: 600px;
+    max-height: 70vh;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid;
+    overflow: auto;
+}
 .condition-section {
     height: 100px;
     padding: 5px;
@@ -58,7 +74,7 @@
     padding: 10px;
 }
 
-.entity-modal-container{
+.custom-modal-container{
     position: fixed;
     top: 0;
     left: 0;
@@ -72,7 +88,7 @@
     background-color: rgba(0, 0, 0, 0.75);
     z-index: 9999;
 }
-.entity-modal{
+.custom-modal{
     border: 1px solid black;
     background-color: lightgrey;
     padding: 10px;
