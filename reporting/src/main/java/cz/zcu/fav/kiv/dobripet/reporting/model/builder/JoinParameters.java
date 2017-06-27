@@ -11,7 +11,8 @@ public class JoinParameters {
     private List<String> selectedPath;
     private List<List<String>> paths;
     //columns for currently selected path
-    private List<List<ForeignKey>> allJoinColumns;
+    private List<List<ForeignKey>> joinKeys;
+    private List<String> joinTypes;
 
 
 
@@ -39,11 +40,19 @@ public class JoinParameters {
         this.selectedJoinColumn = selectedJoinColumn;
     }*/
 
-    public List<List<ForeignKey>> getAllJoinColumns() {
-        return allJoinColumns;
+    public List<List<ForeignKey>> getJoinKeys() {
+        return joinKeys;
     }
 
-    public void setAllJoinColumns(List<List<ForeignKey>> allJoinColumns) {
-        this.allJoinColumns = allJoinColumns;
+    public void setJoinKeys(List<List<ForeignKey>> joinKeys) {
+        this.joinKeys = joinKeys;
+    }
+
+    public List<String> getJoinTypes() {
+        return joinTypes;
+    }
+
+    public void setJoinTypes(List<String> joinTypes) {
+        this.joinTypes = joinTypes;
     }
 }

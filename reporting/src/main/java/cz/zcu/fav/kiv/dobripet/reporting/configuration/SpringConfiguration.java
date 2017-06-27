@@ -1,6 +1,7 @@
 package cz.zcu.fav.kiv.dobripet.reporting.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Config;
 import cz.zcu.fav.kiv.dobripet.reporting.service.StatisticsService;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Petr on 2/26/2017.
@@ -33,6 +37,10 @@ import java.io.IOException;
 public class SpringConfiguration extends WebMvcConfigurerAdapter{
 
     private Logger log = LoggerFactory.getLogger(SpringConfiguration.class);
+
+
+    @Value("${spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS}")
+    private boolean writeDatesAsTimestamps;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -58,6 +66,19 @@ public class SpringConfiguration extends WebMvcConfigurerAdapter{
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
+
+    /**
+     *
+     * @param converters
+     */
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        MappingJackson2HttpMessageConverter jacksonMessageConverter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper objectMapper = jacksonMessageConverter.getObjectMapper();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, writeDatesAsTimestamps);
+        converters.add(jacksonMessageConverter);
+    }
+
 
     //Config regarding reporting
 

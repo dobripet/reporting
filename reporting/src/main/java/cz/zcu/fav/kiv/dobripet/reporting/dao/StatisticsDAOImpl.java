@@ -12,6 +12,7 @@ import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -28,20 +29,21 @@ import java.util.List;
 @Repository
 public class StatisticsDAOImpl implements StatisticsDAO {
     Logger log = LoggerFactory.getLogger(StatisticsDAOImpl.class);
-    @Autowired
+
+    @Value("${dci.database.schemaName}")
+    private String schemaName;
+
     private SessionFactory sessionFactory;
+
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     protected Session getSession() {
         return this.sessionFactory.getCurrentSession();
     }
 
-    @Value("${dci.database.schemaName}")
-    private String schemaName;
-
-    @PostConstruct
-    private void blah(){
-        System.out.println("blahaha " + sessionFactory);
-    }
     @Override
     public long getEntityRowCount(String entityName){
         String query = "SELECT CAST(p.rows AS bigint) AS count " +
@@ -50,7 +52,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
                 "INNER JOIN sys.partitions AS p ON p.object_id=CAST(tbl.object_id AS int) " +
                 "AND p.index_id=idx.index_id " +
                 "WHERE (tbl.name=:entityName " +
-                "AND SCHEMA_NAME(tbl.schema_id)='dciowner')";
+                "AND SCHEMA_NAME(tbl.schema_id)='"+schemaName+"')";
         try{
             return (long) getSession().createNativeQuery(query).setParameter("entityName", entityName).addScalar("count", LongType.INSTANCE).getSingleResult();
         }catch(NoResultException e){
@@ -72,6 +74,10 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             //creating name with schema
             String entitySchemedName = schemaName+"."+entityName;
             return getSession().createNativeQuery(query).setParameter("entitySchemedName", entitySchemedName).setResultSetMapping("StatisticsQueryRow").getResultList();
+            //return getSession().createNativeQuery(query, StatisticsQueryRow.class).setParameter("entitySchemedName", entitySchemedName).getResultList();
+
+
+
             //some manual mapping
             /*List<StatisticsQueryRow> result = new ArrayList<>();
             List<Object[]> rawResult = getSession().createNativeQuery(query).setParameter("entitySchemedName", entitySchemedName).getResultList();

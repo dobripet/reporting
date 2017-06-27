@@ -1,10 +1,12 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.builder;
+package cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.Column;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.JoinParameters;
 
 import java.util.List;
 
-/**
- * Created by Petr on 6/2/2017.
- */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ColumnRequest {
     private List<Column> allColumns;
     private List<Column> columns;

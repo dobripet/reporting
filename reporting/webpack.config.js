@@ -3,10 +3,11 @@
  */
 const webpack = require('webpack');
 const path = require('path');
-const isProd = false; //set true for production
 
 module.exports = function(){
+    const isProd = process.env.NODE_ENV === 'prod';
     //Create vendor bundle
+    console.log('test enviromentu ', process.env.NODE_ENV);
     plugins = [
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
@@ -25,12 +26,18 @@ module.exports = function(){
                 compress: {
                     warnings: false
                 }
+            }),
+            new webpack.DefinePlugin({
+                BASE_URL: JSON.stringify('')
             })
         )
     }else {
         plugins.push(
             new webpack.LoaderOptionsPlugin({
                 debug: true
+            }),
+            new webpack.DefinePlugin({
+                BASE_URL: JSON.stringify('http://localhost:8081/reporting')
             })
         );
     }
@@ -45,13 +52,14 @@ module.exports = function(){
                 'react-dom',
                 'react-redux',
                 'react-router',
-                'react-loader',
+                'react-loader-advanced',
                 'react-bootstrap',
                 'redux',
                 'redux-thunk',
                 'redux-logger',
                 'redux-promise-middleware',
                 'babel-polyfill',
+                'fastpriorityqueue',
                 'type-to-reducer'
             ]
         },

@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,24 +24,36 @@ import java.util.*;
  */
 @Repository
 public class ConfigValidator {
+    @Value("${dci.database.databaseName}")
+    private String databaseName;
+
     Logger log = LoggerFactory.getLogger(ConfigValidator.class);
 
-    @Autowired
     private Config config;
 
-    @Autowired
     private SessionFactory sessionFactory;
 
     //TODO test only
-    @Autowired
     private BuilderService builderService;
+
+    @Autowired
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    @Autowired
+    public void setBuilderService(BuilderService builderService) {
+        this.builderService = builderService;
+    }
 
     protected Session getSession() {
         return this.sessionFactory.getCurrentSession();
     }
-
-    @Value("${dci.database.databaseName}")
-    private String databaseName;
 
     public void validate(){
         String queryTables = "SELECT TABLE_NAME " +
@@ -70,7 +83,6 @@ public class ConfigValidator {
                     //remove from config
                     config.getEntities().remove(tableName);
                 }
-
 
                 //TODO smazat
                 if(config.getEntities().get(tableName) == null || config.getEntities().get(tableName).getReferenceMap() == null || config.getEntities().get(tableName).getReferredByMap() == null){

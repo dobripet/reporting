@@ -1,6 +1,6 @@
 import React from 'react'
 import Loader from 'react-loader'
-
+import {normalizeForTableCell} from '../utils/utils'
 
 export default class PreviewSection extends React.Component{
     constructor(props) {
@@ -24,9 +24,10 @@ export default class PreviewSection extends React.Component{
     }*/
     render() {
         const{
-            rows,
-            loading
-        } = this.props
+            data,
+            loading,
+            columnNames
+        } = this.props;
         /*let columns = <span>Add columns to build query!</span>;
         if(this.props.columns.length > 0) {
             columns = this.props.columns.map((column, index) => <ColumnListItem
@@ -50,11 +51,29 @@ export default class PreviewSection extends React.Component{
                     </tbody>
                 </table>
         }*/
-        console.log(rows);
+        console.log(data);
+        let header = columnNames.map((name, i) => <th key={i}>{name}</th>);
+        let rows = data.map((row, i) => {
+            if(Array.isArray(row)) {
+                let columns = row.map((column, j) => <td key={j}>{normalizeForTableCell(column)}</td>);
+                return <tr key={i}>{columns}</tr>;
+            } else {
+                return <tr key={i}><td>{normalizeForTableCell(row)}</td></tr>
+            }
+        });
         return (
             <div className="preview-section">
                 <Loader loaded={!loading}>
-                    <h1>TODO preview section</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                {header}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rows}
+                        </tbody>
+                    </table>
                 </Loader>
             </div>
 
@@ -62,5 +81,5 @@ export default class PreviewSection extends React.Component{
     }
 }
 PreviewSection.PropTypes={
-    rows: React.PropTypes.array.isRequired
+    data: React.PropTypes.array.isRequired
 };

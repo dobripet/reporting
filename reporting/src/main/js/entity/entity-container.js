@@ -10,12 +10,10 @@ const mapStateToProps = (state) =>{
     console.log("mapuju entities na ", state.entity);
     return {
         entities: state.entity.entities,
-        loaded:  state.entity.loaded,
         loading:  state.entity.loading,
         error:  state.entity.error,
         search: state.entity.search,
         statsLoading: state.entity.statsLoading,
-        statsLoaded: state.entity.statsLoaded,
         statsError: state.entity.statsError
     }
 };

@@ -1,6 +1,3 @@
-/**
- * Created by Petr on 3/6/2017.
- */
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
@@ -26,7 +23,7 @@ const customErrorMiddleware = store => next => action => {
             return error;
         });
 };*/
-const middleware = applyMiddleware(
+export const middleware = applyMiddleware(
     thunk,
     //customErrorMiddleware,
     errorMiddleware,

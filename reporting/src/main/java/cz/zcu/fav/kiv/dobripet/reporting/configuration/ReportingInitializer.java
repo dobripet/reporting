@@ -6,25 +6,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.HashMap;
 
 /**
  * Created by Petr on 4/27/2017.
  */
 public class ReportingInitializer{
-    @Autowired
-    private ConfigValidator configValidator;
-
-    @Autowired
-    private Config config;
-
-    @Autowired
-    private StatisticsService statisticsService;
-
     @Value("${dci.documentation.url}")
     String documentationUrl;
+
+    private ConfigValidator configValidator;
+
+    private Config config;
+
+    private StatisticsService statisticsService;
+
+    @Autowired
+    public void setConfigValidator(ConfigValidator configValidator) {
+        this.configValidator = configValidator;
+    }
+
+    @Autowired
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    @Autowired
+    public void setStatisticsService(StatisticsService statisticsService) {
+        this.statisticsService = statisticsService;
+    }
 
     /**
      * Watches for changes in root context
@@ -33,7 +45,7 @@ public class ReportingInitializer{
      * @param event
      */
     @EventListener()
-    @Transactional
+    @Transactional("dciTransactionManager")
     public void contextRefreshedEvent(ContextRefreshedEvent event){
         if(event.getApplicationContext().getParent() == null) {
             System.out.println("stats " + statisticsService);

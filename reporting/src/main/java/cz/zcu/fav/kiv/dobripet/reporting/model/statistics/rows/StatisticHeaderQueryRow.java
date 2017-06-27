@@ -8,17 +8,16 @@ import java.sql.Timestamp;
 public class StatisticHeaderQueryRow {
     private String name;
     private String updated;
-    private long rows;
-    private long rowsSampled;
-    private int steps;
-    private float density;
-    private float averageKeyLength;
+    private Long rows;
+    private Long rowsSampled;
+    private Integer steps;
+    private Float density;
+    private Float averageKeyLength;
     private String stringIndex;
     private String filterExpression;
-    private long unfilteredRows;
+    private Long unfilteredRows;
 
-    public StatisticHeaderQueryRow(String name, String updated, long rows, long rowsSampled, int steps,
-        float density, float averageKeyLength, String stringIndex, String filterExpression, long unfilteredRows) {
+    public StatisticHeaderQueryRow(String name, String updated, Long rows, Long rowsSampled, Integer steps, Float density, Float averageKeyLength, String stringIndex, String filterExpression, Long unfilteredRows) {
         this.name = name;
         this.updated = updated;
         this.rows = rows;
@@ -47,43 +46,43 @@ public class StatisticHeaderQueryRow {
         this.updated = updated;
     }
 
-    public long getRows() {
+    public Long getRows() {
         return rows;
     }
 
-    public void setRows(long rows) {
+    public void setRows(Long rows) {
         this.rows = rows;
     }
 
-    public long getRowsSampled() {
+    public Long getRowsSampled() {
         return rowsSampled;
     }
 
-    public void setRowsSampled(long rowsSampled) {
+    public void setRowsSampled(Long rowsSampled) {
         this.rowsSampled = rowsSampled;
     }
 
-    public int getSteps() {
+    public Integer getSteps() {
         return steps;
     }
 
-    public void setSteps(int steps) {
+    public void setSteps(Integer steps) {
         this.steps = steps;
     }
 
-    public float getDensity() {
+    public Float getDensity() {
         return density;
     }
 
-    public void setDensity(float density) {
+    public void setDensity(Float density) {
         this.density = density;
     }
 
-    public float getAverageKeyLength() {
+    public Float getAverageKeyLength() {
         return averageKeyLength;
     }
 
-    public void setAverageKeyLength(float averageKeyLength) {
+    public void setAverageKeyLength(Float averageKeyLength) {
         this.averageKeyLength = averageKeyLength;
     }
 
@@ -103,11 +102,11 @@ public class StatisticHeaderQueryRow {
         this.filterExpression = filterExpression;
     }
 
-    public long getUnfilteredRows() {
+    public Long getUnfilteredRows() {
         return unfilteredRows;
     }
 
-    public void setUnfilteredRows(long unfilteredRows) {
+    public void setUnfilteredRows(Long unfilteredRows) {
         this.unfilteredRows = unfilteredRows;
     }
 }

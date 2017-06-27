@@ -1,32 +1,38 @@
-import { COLUMN_LIST_ADD_POST } from '../column/column-actions'
+import {QUERY_UPDATE_SQL_AND_PREVIEW} from '../query/query-actions'
+import { updateObject } from '../utils/utils'
+import { MENU_CLEAR } from '../menu/menu-actions'
 import typeToReducer from 'type-to-reducer'
 const initialState = {
-    rows: [],
+    data: [],
+    columnNames: [],
     loading: false,
     loaded: false,
     error: null,
 };
 
 export default typeToReducer({
-    [COLUMN_LIST_ADD_POST]: {
+    [QUERY_UPDATE_SQL_AND_PREVIEW]: {
         PENDING: (state) => (
-            Object.assign( {}, state, {
+            updateObject(state, {
                 loading: true,
                 error: null
             })
         ),
         REJECTED: (state, action) => (
-            Object.assign( {}, state, {
+            updateObject(state, {
                 loading: false,
                 error: action.payload.error
             })
         ),
         FULFILLED: (state, action) => (
-            Object.assign( {}, state, {
+            updateObject(state, {
                 loading: false,
-                loaded: Date.now(),
-                rows: action.payload.preview
+                data: action.payload.previewData,
+                columnNames: action.payload.columns.map(c=>c.title)
             })
         ),
-    }
+    },
+    [MENU_CLEAR]: (state, action) => (
+        updateObject(state, initialState)
+    )
 }, initialState);

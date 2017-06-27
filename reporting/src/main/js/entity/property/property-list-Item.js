@@ -72,7 +72,11 @@ export default class PropertyListItem extends React.Component{
             stats = <PropertyStatsTooltip property={this.props.property} />;
         }
         if(this.state.showStatsModal){
-            stats = <PropertyStatsModal property={this.props.property} onClose={this.handleCloseModal} getEntityPropertyStats={this.props.getEntityPropertyStats}/>;
+            stats = <PropertyStatsModal
+                property={this.props.property}
+                onClose={this.handleCloseModal}
+                getEntityPropertyStats={this.props.getEntityPropertyStats}
+                loading={this.props.loading}/>;
         }
         return (
             <li>

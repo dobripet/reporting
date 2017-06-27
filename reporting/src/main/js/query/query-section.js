@@ -10,6 +10,11 @@ export default class QuerySection extends React.Component{
         this.handleEditTitle = this.handleEditTitle.bind(this);
         this.handleSetAggregateFunction = this.handleSetAggregateFunction.bind(this);*/
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.dirty && !nextProps.loading){
+            setTimeout(this.props.update(), 50);
+        }
+    }
     /*handleRemove (columnIndex){
         console.log("remove ", columnIndex);
         this.props.removeColumnFromColumnList(columnIndex);
@@ -54,7 +59,7 @@ export default class QuerySection extends React.Component{
         return (
             <div className="query-section">
                 <Loader loaded={!loading}>
-                    <h1>TODO query section</h1>
+                    {query}
                 </Loader>
             </div>
 

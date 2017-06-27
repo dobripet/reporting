@@ -1,6 +1,3 @@
-/**
- * Created by Petr on 3/19/2017.
- */
 import React from 'react'
 import PropertyListItem from './property/property-list-Item'
 import EntityStatsTooltip from './entity-stats-tooltip'
@@ -16,8 +13,8 @@ export default class EntityListItem extends React.Component{
             showStatsModal: false
         };
         // bindings
-        this.handleExpand  = this.handleExpand .bind(this);
-        this.handleStats = this.handleStats .bind(this);
+        this.handleExpand  = this.handleExpand.bind(this);
+        this.handleStats = this.handleStats.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
         this.handlePropertyAdd= this.handlePropertyAdd.bind(this);
         this.handleMouseOver= this.handleMouseOver.bind(this);
@@ -50,7 +47,8 @@ export default class EntityListItem extends React.Component{
 
     handleAdd() {
         console.log("add entity");
-        this.props.onAdd(this.props.entity, this.props.entity.properties);
+        //little workaround to add multiple properties
+        this.props.onAdd(this.props.entity, Object.keys(this.props.entity.properties).map(k => this.props.entity.properties[k]));
     }
     handlePropertyAdd(property) {
         console.log("add prop", property);
@@ -84,28 +82,34 @@ export default class EntityListItem extends React.Component{
         this.hideStatsModal();
     }
     render() {
+        const {
+            entity,
+            loading,
+            getEntityRowCount
+        } = this.props;
         let propertyList = null;
         if(this.state.expanded){
-            const propertyItems = Object.keys(this.props.entity.properties).sort().map(property => {
-                return (<PropertyListItem  key={`${this.props.entity.name}-${property}`}
-                       getEntityPropertyStats={this.getEntityPropertyStats}
-                       property={this.props.entity.properties[property]}
-                       onAdd={this.handlePropertyAdd} />);
-            });
+            const propertyItems = Object.keys(entity.properties).sort().map(property =>
+                <PropertyListItem
+                    key={`${entity.name}-${property}`}
+                    getEntityPropertyStats={this.getEntityPropertyStats}
+                    property={entity.properties[property]}
+                    onAdd={this.handlePropertyAdd}
+                    loading={loading}
+                />);
             propertyList = <ul>{propertyItems}</ul>
         }
         let stats = null;
         if(this.state.showStatsTooltip){
-            stats = <EntityStatsTooltip entity={this.props.entity} getEntityRowCount={this.props.getEntityRowCount}/>;
+            stats = <EntityStatsTooltip entity={entity} getEntityRowCount={getEntityRowCount}/>;
         }
-        console.log(this.props.getEntityRowCount);
         if(this.state.showStatsModal){
-            stats = <EntityStatsModal entity={this.props.entity} onClose={this.handleCloseModal} getEntityRowCount={this.props.getEntityRowCount}/>;
+            stats = <EntityStatsModal entity={entity} onClose={this.handleCloseModal} getEntityRowCount={getEntityRowCount}/>;
         }
         return (
             <div>
                 <span onClick={this.handleExpand} > + </span>
-                <span onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>{this.props.entity.name}</span>
+                <span onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>{entity.name}</span>
                 <span onClick={this.handleStats} > iiii</span>
                 <button onClick={this.handleAdd}>Add</button>
                 {stats}

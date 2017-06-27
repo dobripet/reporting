@@ -11,7 +11,7 @@ public class BoolPropertyStatistic extends PropertyStatistics {
     private float truePercentage;
     private float falsePercentage;
 
-    public BoolPropertyStatistic(float nullPercentage, long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, float truePercentage, float falsePercentage) {
+    public BoolPropertyStatistic(Float nullPercentage, Long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, float truePercentage, float falsePercentage) {
         super(nullPercentage, rowsSampled, updated, histogram);
         this.truePercentage = truePercentage;
         this.falsePercentage = falsePercentage;

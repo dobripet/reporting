@@ -14,6 +14,28 @@
         <selenium.version>3.3.0</selenium.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+                <app.port>8081</app.port>
+                <node.env>dev</node.env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+                <app.port>8080</app.port>
+                <node.env>prod</node.env>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <!-- Model -->
 
@@ -21,13 +43,6 @@
             <groupId>cz.zcu.fav.kiv.dobripet.reporting</groupId>
             <artifactId>reporting-model</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.github.jsqlparser</groupId>
-            <artifactId>jsqlparser</artifactId>
-            <version>1.0</version>
         </dependency>
 
         <!-- Pentaho -->
@@ -59,6 +74,11 @@
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.1.1</version>
+        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -69,6 +89,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.11.1.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -86,6 +111,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>2.8.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.8.7</version>
         </dependency>
 
@@ -184,7 +214,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <port>8081</port>
+                    <port>${app.port}</port>
                     <path>/reporting</path>
                 </configuration>
             </plugin>
@@ -219,6 +249,11 @@
                         <goals>
                             <goal>webpack</goal>
                         </goals>
+                        <configuration>
+                            <environmentVariables>
+                                <NODE_ENV>${node.env}</NODE_ENV>
+                            </environmentVariables>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -263,6 +298,12 @@
                     </configuration>
                 </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
     <repositories>
         <repository>

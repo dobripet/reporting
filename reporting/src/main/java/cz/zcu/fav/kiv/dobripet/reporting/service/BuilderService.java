@@ -1,9 +1,11 @@
 package cz.zcu.fav.kiv.dobripet.reporting.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Entity;
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.Column;
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.ColumnRequest;
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.ColumnResponse;
+import cz.zcu.fav.kiv.dobripet.reporting.model.ForeignKey;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.CustomQuery;
+import cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers.*;
+import cz.zcu.fav.kiv.dobripet.reporting.utils.InvalidDataException;
 
 import java.util.List;
 
@@ -12,7 +14,11 @@ import java.util.List;
  */
 public interface BuilderService {
     //String getJoinFromColumns(List<Column> columns);
-    ColumnResponse getJoinFromColumns(ColumnRequest columnRequest);
+    ColumnResponse getJoinFromColumns(ColumnRequest columnRequest) throws InvalidDataException;
+    List<List<ForeignKey>> getJoinKeysFromPath(List<String> path);
     List<String> getPriorityPath(Entity start, Entity end);
     List<List<String>> getAllPaths(Entity start, Entity end);
+    SqlAndPreviewResponse getSqlAndPreview(SqlAndPreviewRequest sqlAndPreviewRequest) throws InvalidDataException;
+    CustomQuery saveCustomQuery(CustomQueryRequest customQueryRequest, Integer id) throws InvalidDataException, JsonProcessingException;
+    List<CustomQuery> getAllCustomQueriesForCurrentUser();
 }

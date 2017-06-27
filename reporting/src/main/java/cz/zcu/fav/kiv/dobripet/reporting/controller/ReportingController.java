@@ -15,8 +15,12 @@ import javax.annotation.PostConstruct;
  */
 @Controller
 public class ReportingController {
-    @Autowired
     private Config config;
+
+    @Autowired
+    public void setConfig(Config config) {
+        this.config = config;
+    }
 
     /**
      * Handles requests for any mapping (/**)

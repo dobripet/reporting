@@ -11,7 +11,7 @@ public class DateTimePropertyStatistics extends PropertyStatistics{
     protected Object min;
     protected Object max;
 
-    public DateTimePropertyStatistics(float nullPercentage, long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, Object min, Object max) {
+    public DateTimePropertyStatistics(Float nullPercentage, Long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, Object min, Object max) {
         super(nullPercentage, rowsSampled, updated, histogram);
         this.min = min;
         this.max = max;

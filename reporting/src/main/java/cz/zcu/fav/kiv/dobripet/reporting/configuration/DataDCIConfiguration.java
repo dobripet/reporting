@@ -5,6 +5,7 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -20,34 +21,40 @@ import java.util.Properties;
  * Created by Petr on 4/5/2017.
  */
 @Configuration
-@EnableTransactionManagement
-@PropertySource(value = { "classpath:application.properties" })
-public class HibernateConfiguration {
+//@EnableTransactionManagement
+@PropertySource(value = {"classpath:application.properties"})
+public class DataDCIConfiguration {
 
-    @Autowired
     private Environment env;
 
-    @Bean
+    @Autowired
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
+
+    @Bean(name = "dciDataSource")
     public DataSource getDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(env.getProperty("datasource.driverClassName"));
-        dataSource.setUrl(env.getProperty("datasource.url"));
-        dataSource.setUsername(env.getProperty("datasource.username"));
-        dataSource.setPassword(env.getProperty("datasource.password"));
+        dataSource.setDriverClassName(env.getProperty("dci.datasource.driverClassName"));
+        dataSource.setUrl(env.getProperty("dci.datasource.url"));
+        dataSource.setUsername(env.getProperty("dci.datasource.username"));
+        dataSource.setPassword(env.getProperty("dci.datasource.password"));
         return dataSource;
     }
-    @Bean
-    public org.springframework.orm.hibernate5.LocalSessionFactoryBean getSessionFactory() {
+
+    @Bean(name = "sessionFactory")
+    public LocalSessionFactoryBean getSessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(getDataSource());
-        sessionFactory.setPackagesToScan(new String[] { "cz.zcu.fav.kiv.dobripet.reporting.model" });
+        sessionFactory.setMappingResources("hibernate-query-mappings.xml");
+        //sessionFactory.setPackagesToScan(new String[]{"cz.zcu.fav.kiv.dobripet.reporting.model"});
         sessionFactory.setHibernateProperties(getHibernateProperties());
         return sessionFactory;
     }
 
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        properties.put(AvailableSettings.DIALECT, env.getRequiredProperty("hibernate.dialect"));
+        properties.put(AvailableSettings.DIALECT, env.getRequiredProperty("dci.hibernate.dialect"));
         properties.put(AvailableSettings.SHOW_SQL, env.getRequiredProperty("hibernate.show_sql"));
         //properties.put(AvailableSettings.STATEMENT_BATCH_SIZE, env.getRequiredProperty("hibernate.batch.size"));
         properties.put(AvailableSettings.HBM2DDL_AUTO, env.getRequiredProperty("hibernate.hbm2ddl.auto"));
@@ -55,10 +62,10 @@ public class HibernateConfiguration {
         return properties;
     }
 
-    @Bean
+    @Bean(name = "dciTransactionManager")
     public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-        HibernateTransactionManager txManager = new HibernateTransactionManager();
-        txManager.setSessionFactory(sessionFactory);
-        return txManager;
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory);
+        return transactionManager;
     }
 }

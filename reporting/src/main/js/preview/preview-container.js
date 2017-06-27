@@ -3,7 +3,8 @@ import PreviewSection from './preview-section';
 
 const mapStateToProps = (state) =>{
     return {
-        rows: state.preview.rows,
+        data: state.preview.data,
+        columnNames: state.preview.columnNames,
         loaded:  state.preview.loaded,
         loading:  state.preview.loading,
         error:  state.preview.error

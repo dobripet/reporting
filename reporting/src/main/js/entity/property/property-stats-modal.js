@@ -1,4 +1,5 @@
 import React from 'react'
+import Loader from 'react-loader'
 import {BarChart, LineChart, XAxis, YAxis,CartesianGrid, Legend, Bar, Line, Tooltip } from 'recharts'
 import {formatDateTime} from '../../utils/utils';
 export default class PropertyStatsModal extends React.Component {
@@ -81,7 +82,7 @@ export default class PropertyStatsModal extends React.Component {
             if(statistic) {
                 nullPercentageRow = <tr>
                     <td>Null Percentage:</td>
-                    <td>{statistic.nullPercentage}%</td>
+                    <td>{statistic.nullPercentage.toFixed(2)}%</td>
                 </tr>;
             }
         }
@@ -188,6 +189,7 @@ export default class PropertyStatsModal extends React.Component {
         return (
             <div className="custom-modal-container">
                 <div className="custom-modal">
+
                     <h3>{this.props.property.name}</h3>
                     {notNullSpan}
                     <table>
@@ -217,6 +219,8 @@ export default class PropertyStatsModal extends React.Component {
         )
     }
 }
+/*</Loader>*/
+/* <Loader loaded={false} shadow={true}>*/
 
 PropertyStatsModal.propTypes = {
     property: React.PropTypes.shape({
@@ -224,5 +228,6 @@ PropertyStatsModal.propTypes = {
         dataType: React.PropTypes.string.isRequired,
         enumConstraints: React.PropTypes.array
     }).isRequired,
-    getEntityPropertyStats: React.PropTypes.func.isRequired
+    getEntityPropertyStats: React.PropTypes.func.isRequired,
+    onClose: React.PropTypes.func.isRequired
 };

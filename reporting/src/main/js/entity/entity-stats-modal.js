@@ -1,4 +1,5 @@
 import React from 'react'
+import EntityStatsModalKey from './entity-stats-modal-key'
 export default class EntityStatsModal extends React.Component {
     constructor(props) {
         super(props);
@@ -16,43 +17,28 @@ export default class EntityStatsModal extends React.Component {
         this.props.onClose();
     }
     render(){
+        const {
+            referredByMap,
+            referenceMap,
+        } = this.props.entity;
         console.log(this.props.entity.schemaUrl);
         console.log(this.props.entity.tableUrl);
+        console.log(this.props.entity);
         // do referred by list with columns
         let referred = "No tables found.";
-        if(this.props.entity.referredByMap && Object.keys(this.props.entity.referredByMap).length > 0 ){
+        if(referredByMap && Object.keys(referredByMap).length > 0 ){
             //map all referredBy tables
             console.log("jsem tu");
-            let rows = Object.keys(this.props.entity.referredByMap).map(tableName => {
-                //map every foreign key of given table
-                console.log("tableName", tableName);
-                let keys =  this.props.entity.referredByMap[tableName].map((fk, i) => {
-                    let localKeys = fk.localColumnNames.join(', ');
-                    let foreignKeys = fk.foreignColumnNames.join(', ');
-                    return <li key={i} >{foreignKeys} -> {localKeys}</li>
-                });
-                console.log(keys);
-                return <li key={tableName}>{tableName}<ul>{keys}</ul></li>;
-            });
+            let rows = Object.keys(referredByMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referredByMap[tableName]} name={tableName}/>);
             referred = <ul>{rows}</ul>;
         }
 
         // do reference list with columns
         let reference = "No tables found.";
-        if(this.props.entity.referenceMap && Object.keys(this.props.entity.referenceMap).length > 0 ){
+        if(referenceMap && Object.keys(referenceMap).length > 0 ){
             //map all referredBy tables
             //console.log("jsem tu");
-            let rows = Object.keys(this.props.entity.referenceMap).map(tableName => {
-                //map every foreign key of given table
-                //console.log("tableName", tableName);
-                let keys =  this.props.entity.referenceMap[tableName].map((fk, i) => {
-                    let localKeys = fk.localColumnNames.join(', ');
-                    let foreignKeys = fk.foreignColumnNames.join(', ');
-                    return <li key={i} >{localKeys} -> {foreignKeys} </li>
-                });
-                console.log(keys);
-                return <li key={tableName}>{tableName}<ul>{keys}</ul></li>;
-            });
+            let rows = Object.keys(referenceMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referenceMap[tableName]} name={tableName}/>);
             reference = <ul>{rows}</ul>;
         }
         //documentation links
@@ -116,5 +102,6 @@ EntityStatsModal.propTypes = {
                     localColumnNames: React.PropTypes.array
                 })))
     }).isRequired,
-    getEntityRowCount: React.PropTypes.func.isRequired
+    getEntityRowCount: React.PropTypes.func.isRequired,
+    onClose: React.PropTypes.func.isRequired
 };

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+    http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+    <sql-result-set-mapping name="StatisticsQueryRow">
+        <constructor-result target-class="cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.StatisticsQueryRow">
+            <column name="column_name" class="java.lang.String"/>
+            <column name="statistic_name" class="java.lang.String"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="StatisticHeaderQueryRow">
+        <constructor-result target-class="cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.StatisticHeaderQueryRow">
+            <column name="Name" class="java.lang.String"/>
+            <column name="Updated" class="java.lang.String"/>
+            <column name="Rows" class="java.lang.Long"/>
+            <column name="Rows Sampled" class="java.lang.Long"/>
+            <column name="Steps" class="java.lang.Integer"/>
+            <column name="Density" class="java.lang.Float"/>
+            <column name="Average key length" class="java.lang.Float"/>
+            <column name="String Index" class="java.lang.String"/>
+            <column name="Filter Expression" class="java.lang.String"/>
+            <column name="Unfiltered Rows" class="java.lang.Long"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="HistogramQueryRow">
+        <constructor-result target-class="cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.HistogramQueryRow">
+            <column name="RANGE_HI_KEY" class="java.lang.String"/>
+            <column name="RANGE_ROWS" class="java.lang.Float"/>
+            <column name="EQ_ROWS" class="java.lang.Float"/>
+            <column name="DISTINCT_RANGE_ROWS" class="java.lang.Float"/>
+            <column name="AVG_RANGE_ROWS" class="java.lang.Float"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    <sql-result-set-mapping name="ConstraintQueryRow">
+        <constructor-result target-class="cz.zcu.fav.kiv.dobripet.reporting.model.statistics.rows.ConstraintQueryRow">
+            <column name="table_name" class="java.lang.String"/>
+            <column name="column_name" class="java.lang.String"/>
+            <column name="constraint_definition" class="java.lang.String"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+</entity-mappings>

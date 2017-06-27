@@ -1,11 +1,11 @@
-/**
- * Created by Petr on 3/4/2017.
- */
 import React from 'react'
-import Loader from 'react-loader'
+import Loader from '../utils/custom-loader'
 import _ from 'lodash'
 import Search from './search'
 import EntityListItem from './entity-list-item'
+
+
+import {initState} from '../test/storeMock'
 
 export default class EntitySection extends React.Component{
     constructor(props) {
@@ -37,9 +37,11 @@ export default class EntitySection extends React.Component{
             entities,
             search,
             loading,
+            statsLoading,
             error
         } = this.props;
 
+        console.log('data', initState);
         //basic error handling
         if(error){
             console.log(error);
@@ -61,17 +63,26 @@ export default class EntitySection extends React.Component{
         //sorting and mapping
         if(Object.keys(filtered).length > 0) {
             entityList = Object.keys(filtered).sort().map(entityName =>
-                <EntityListItem key={entityName} entity={filtered[entityName]}
-                    onAdd={this.handleAddProperty} getEntityRowCount={this.props.getEntityRowCount}
-                    getEntityPropertyStats={this.getEntityPropertyStats}/>);
+                <EntityListItem
+                    key={entityName}
+                    entity={filtered[entityName]}
+                    onAdd={this.handleAddProperty}
+                    getEntityRowCount={this.props.getEntityRowCount}
+                    getEntityPropertyStats={this.getEntityPropertyStats}
+                    loading={statsLoading}
+
+                />);
         }
         console.log(this.getEntityRowCount);
+        console.log("loading ", statsLoading);
         return (
             <div className="entity-section">
-                <Loader loaded={!loading}>
+                <div className="scrollable-content">
+                <Loader show={loading}>
                     <Search id="search-input" placeholder="Search table or column" onChange={this.doSearch} focus={true}/>
-                    {entityList}
+                        {entityList}
                 </Loader>
+                </div>
             </div>
 
         );

@@ -11,7 +11,7 @@ public class NumberPropertyStatistics extends DateTimePropertyStatistics {
 
     private Object avg;
 
-    public NumberPropertyStatistics(float nullPercentage, long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, Object min, Object max, Object avg) {
+    public NumberPropertyStatistics(Float nullPercentage, Long rowsSampled, Timestamp updated, List<HistogramRecord> histogram, Object min, Object max, Object avg) {
         super(nullPercentage, rowsSampled, updated, histogram, min, max);
         this.avg = avg;
     }

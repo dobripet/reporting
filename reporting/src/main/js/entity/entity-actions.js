@@ -5,7 +5,7 @@ export const ENTITY_LIST_FETCH = 'ENTITY_LIST_FETCH';
 export function fetchEntityList() {
     return dispatch => dispatch({
         type: ENTITY_LIST_FETCH,
-        payload: fetch('http://localhost:8081/reporting/api/entities')
+        payload: fetch(`${BASE_URL}/api/entities`)
             .then(response => {
                 if(response.ok) {
                     return response.json().then(json => Promise.resolve(json));
@@ -68,11 +68,11 @@ export const ENTITY_STATS_ROW_COUNT_FETCH = 'ENTITY_STATS_ROW_COUNT_FETCH';
 export function getEntityRowCount(name){
     return dispatch => dispatch({
         type: ENTITY_STATS_ROW_COUNT_FETCH,
-        payload: fetch('http://localhost:8081/reporting/api/entities/'+name+'/stats/rowcount')
+        payload: fetch(`${BASE_URL}/api/entities/${name}/stats/rowcount`)
             .then(response => {
                 if(response.ok) {
                     return response.json().then(json => {
-                        json.name = name;
+                        json.entityName = name;
                         return Promise.resolve(json)
                     });
                 } else {
@@ -85,7 +85,7 @@ export const ENTITY_PROPERTY_STATS_FETCH = 'ENTITY_PROPERTY_STATS_FETCH';
 export function getEntityPropertyStats(entityName, propertyName){
     return dispatch => dispatch({
         type: ENTITY_PROPERTY_STATS_FETCH,
-        payload: fetch('http://localhost:8081/reporting/api/entities/'+entityName+'/properties/'+propertyName+'/stats')
+        payload: fetch(`${BASE_URL}/api/entities${entityName}/properties/${propertyName}/stats`)
             .then(response => {
                 if(response.ok) {
                 return response.json().then(json => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Loader from 'react-loader'
 import ColumnListItem from './column-list-item'
-import JoinModal from './join-modal'
+import JoinModal from '../join/join-modal'
 
 
 export default class ColumnSection extends React.Component{

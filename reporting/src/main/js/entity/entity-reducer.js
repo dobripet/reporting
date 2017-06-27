@@ -1,21 +1,18 @@
-/**
- * Created by Petr on 3/13/2017.
- */
-import { ENTITY_LIST_FETCH, ENTITY_LIST_SEARCH, ENTITY_STATS_ROW_COUNT_FETCH, ENTITY_PROPERTY_STATS_FETCH } from './entity-actions'
 import typeToReducer from 'type-to-reducer'
+import { ENTITY_LIST_FETCH, ENTITY_LIST_SEARCH, ENTITY_STATS_ROW_COUNT_FETCH, ENTITY_PROPERTY_STATS_FETCH } from './entity-actions'
+import { MENU_CLEAR } from '../menu/menu-actions'
+import { deleteItemFromArray, updateItemInArray, updateObject } from '../utils/utils'
 const initialState = {
     entities: {},
     loading: false,
-    loaded: false,
     error: null,
     search: '',
     statsLoading: false,
-    statsLoaded: false,
     statsError: false
 };
 
 const addRowCount = (entities, payload) => {
-    entities[payload.name].rowCount = payload.rowCount;
+    entities[payload.entityName].rowCount = payload.rowCount;
     return entities;
 };
     /*for(let entity in entities){
@@ -28,7 +25,7 @@ const addRowCount = (entities, payload) => {
     return entities;
 };*/
 const addPropertyStats = (entities, payload) => {
-    entities[payload.entityName].properties[payload.propertyName].statistic = payload.statistic;
+    entities[payload.entityName].properties[payload.propertyName].statistic = payload;
     return entities;
 };
 export default typeToReducer({
@@ -49,7 +46,10 @@ export default typeToReducer({
             Object.assign( {}, state, {
                 loading: false,
                 loaded: Date.now(),
-                entities: action.payload.entities
+                entities: action.payload.reduce((entities, entity) => {
+                    entities[entity.name] = entity;
+                    return entities;
+                }, {})
             })
         ),
     },
@@ -99,5 +99,12 @@ export default typeToReducer({
                 entities: addPropertyStats(state.entities, action.payload)
             })
         )
-    }
+    },
+    [MENU_CLEAR]:(state, action) => (
+        updateObject(state, {
+            search: '',
+            statsError: false,
+            error: null,
+        })
+    )
     }, initialState);

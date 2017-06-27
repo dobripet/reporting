@@ -1,6 +1,5 @@
 package cz.zcu.fav.kiv.dobripet.reporting.service;
 
-import cz.zcu.fav.kiv.dobripet.reporting.configuration.ConfigValidator;
 import cz.zcu.fav.kiv.dobripet.reporting.dao.StatisticsDAO;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Config;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Entity;
@@ -14,31 +13,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-/**
- * Created by Petr on 4/23/2017.
- */
-
 @Service("statisticsService")
-@Transactional
+@Transactional(value="dciTransactionManager")
 public class StatisticsServiceImpl implements StatisticsService {
 
     Logger log = LoggerFactory.getLogger(StatisticsService.class);
 
-    @Autowired
     private StatisticsDAO statisticsDAO;
-    @Autowired
+
     private Config config;
 
-   /* @PostConstruct
+    @Autowired
+    public void setStatisticsDAO(StatisticsDAO statisticsDAO) {
+        this.statisticsDAO = statisticsDAO;
+    }
+
+    @Autowired
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    /* @PostConstruct
     private void init(){
         System.out.println("ajaja " +config + statisticsDAO);
         this.initializeStatistics(config);
@@ -151,14 +153,17 @@ public class StatisticsServiceImpl implements StatisticsService {
         System.out.println("wtf");
         List<HistogramQueryRow> rows = statisticsDAO.getHistogram(entityName,statisticsName);
         StatisticHeaderQueryRow header = statisticsDAO.getStatsHeader(entityName, statisticsName);
-        float nullPercentage = 0;
+        Float nullPercentage = null;
         float trues = 0;
         float falses = 0;
         List<HistogramRecord> histogram = new ArrayList<>();
         //workaround to get instant from statistic datetime, DBMS returns dates in this format 'Dec 13 2015  8:20PM'
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy h:mma");
-        LocalDateTime updatedLDT = LocalDateTime.parse(header.getUpdated().replace("  ", " "), formatter);
-        Timestamp updated = Timestamp.valueOf(updatedLDT);
+        Timestamp updated = null;
+        if(header.getUpdated() != null) {
+            LocalDateTime updatedLDT = LocalDateTime.parse(header.getUpdated().replace("  ", " "), formatter);
+            updated = Timestamp.valueOf(updatedLDT);
+        }
         System.out.println(updated);
         if(rows != null && rows.size() > 0) {
             //process histogram
@@ -183,7 +188,9 @@ public class StatisticsServiceImpl implements StatisticsService {
                 histogram.add(new HistogramRecord(row.getRangeHiKey(),row.getEqRows()+row.getRangeRows()));
             }
             //percentage of null records
-            nullPercentage = 100*nullCount/header.getRows();
+            if(header.getRows() != null) {
+                nullPercentage = 100 * nullCount / header.getRows();
+            }
 
         }
         //usable size of histogram

@@ -1,0 +1,61 @@
+import React from 'react'
+import { TYPE_CONFIRM, TYPE_ERROR, TYPE_INFO } from './modal-actions'
+export default class Modal extends React.Component {
+    constructor(props) {
+        super(props);
+        // bindings
+        this.handleConfirm = this.handleConfirm.bind(this);
+        this.handleDecline = this.handleDecline.bind(this);
+    }
+    handleConfirm(){
+        this.props.dispatch(this.props.modal.confirm);
+    }
+    handleDecline(){
+        this.props.dispatch(this.props.modal.decline);
+    }
+    render(){
+        const {
+            message,
+            type
+        } = this.props.modal;
+        console.log('wrd modal ', this.props.modal);
+        let buttons= {};
+        let className = null;
+        switch(type){
+            case TYPE_CONFIRM: {
+                className="alert alert-info";
+                buttons = <div>
+                    <button onClick={this.handleConfirm}>Ok</button>
+                    <button onClick={this.handleDecline}>Cancel</button>
+                </div>
+            } break;
+            case TYPE_ERROR: {
+                console.log("wtf modal");
+                className="alert alert-danger";
+                buttons = <div><button onClick={this.handleConfirm}>Ok</button></div>
+            } break;
+            default : {
+                className="alert alert-success";
+                buttons = <div><button onClick={this.handleConfirm}>Ok</button></div>
+            } break;
+        }
+        return (
+            <div className="top-modal-container">
+                <div className="custom-modal">
+                    <div className={className}>{message}</div>
+                    {buttons}
+                </div>
+            </div>
+        )
+    }
+}
+
+Modal.propTypes = {
+    dispatch: React.PropTypes.func.isRequired,
+    modal: React.PropTypes.shape({
+        confirm: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]).isRequired,
+        decline: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.func]),
+        message: React.PropTypes.string.isRequired,
+        type: React.PropTypes.string.isRequired
+    }),
+};
