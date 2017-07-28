@@ -42,6 +42,13 @@ export function deleteItemFromArray(array, index){
     return a;
 }
 
+export function getParametersStart(params){
+    return params.selectedPath[0];
+}
+export function getParametersEnd(params){
+    return params.selectedPath[params.selectedPath.length-1];
+}
+
 export function updateItemInArray(array, index, updateItemCallback) {
     const updatedItems = array.map((item, i) => {
         if(i !== index) {
@@ -56,6 +63,43 @@ export function updateItemInArray(array, index, updateItemCallback) {
     console.log("items ", updatedItems);
     return updatedItems;
 }
+
+export function getJoinedEntities(parameters, index){
+    let joinedEntities = {};
+    //first run find all joined entities
+    parameters.forEach((param, i) => {
+        joinedEntities[getStart(param)] = true;
+        joinedEntities[getEnd(param)] = true;
+    });
+    //delete all children to prevent breaking tree
+    if(typeof index === 'number'){
+        let children = [];
+        fillChildren(children, parameters, getEnd(parameters[index]));
+        console.log('children', children);
+        children.forEach(c => {
+            delete joinedEntities[c];
+        })
+    }
+    return Object.keys(joinedEntities);
+}
+
+const fillChildren = (children, parameters, child) =>{
+    //recursively find all children
+    parameters.forEach(param => {
+        if(getStart(param) === child){
+            fillChildren(children, parameters, getEnd(param));
+        }
+        if(getEnd(param) === child){
+            children.push(child);
+        }
+    })
+};
+const getEnd = (param) => {
+    return param.selectedPath[param.selectedPath.length-1];
+};
+const getStart = (param) => {
+    return param.selectedPath[0];
+};
 
 export function removeEntityFromJoinParameters(parameters, entityName, entities){
     let obj = {openModal: false};
@@ -99,6 +143,47 @@ export function removeEntityFromJoinParameters(parameters, entityName, entities)
 
     });
     return obj;
+}
+
+export function isMiddleEntityFixedAnywhere(parameters, entity){
+    //check if middle entity is join start for any join
+    let c = 0;
+    parameters.forEach(p=>{
+        if(p.selectedPath[0] === entity){
+            c++;
+        }
+    });
+    //if yes, check if there is another way to connect that entity
+    let cc = 0;
+    if( c > 0 ){
+        parameters.forEach(p=>{
+            for(let j = 1; j < p.selectedPath.length-1;j++){
+                if(p.selectedPath[j] === entity){
+                    cc++;
+                }
+            }
+        });
+        //this is the only way
+        if( cc < 2){
+            return true;
+        }
+    }
+    //exists any other way
+    return false;
+}
+
+export function removeJoins(parameters, entity, processed){
+    parameters.forEach((param, i)=>{
+        //join ends with entity
+        if(param.selectedPath[param.selectedPath.length-1] === entity){
+            for( let j = 1; j < param.selectedPath-1 ;j++){
+                //some entities are tied to middle ones from this join so reconnect it
+                if(isMiddleEntityFixedAnywhere(parameters, param.selectedPath[j])){
+
+                }
+            }
+        }
+    })
 }
 
 export function createJoinTypes(size, defaultJoinType) {

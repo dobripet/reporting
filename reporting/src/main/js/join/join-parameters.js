@@ -26,8 +26,9 @@ export default class JoinParameters extends React.Component{
         for(let column of joinKeys){
             console.log(column);
         }
+        console.log('offset', this.props.offset);
         return (
-            <div>
+            <div style={{marginLeft: this.props.offset}}>
                 {start} -> {end} <button onClick={this.showEdit}>Edit</button>
             </div>
         );
@@ -39,5 +40,6 @@ JoinParameters.propTypes = {
     joinParameters: React.PropTypes.shape({
         selectedPath: React.PropTypes.array.isRequired,
         joinKeys: React.PropTypes.array.isRequired
-    }).isRequired
+    }).isRequired,
+    offset: React.PropTypes.number.isRequired
 };

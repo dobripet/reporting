@@ -8,21 +8,23 @@ export default class JoinModal extends React.Component {
         //initial state
         this.state = {
             joinParameters: this.props.joinParameters,
-            selectedIndex: getSelectedPathIndex(this.props.joinParameters.paths, this.props.joinParameters.selectedPath)
+            selectedIndex: getSelectedPathIndex(this.props.joinParameters.paths, this.props.joinParameters.selectedPath),
+            joinStart: this.props.joinParameters.selectedPath[0]
         };
         // bindings
         this.handleClose = this.handleClose.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleKeysChange = this.handleKeysChange.bind(this);
         this.handlePathChange = this.handlePathChange.bind(this);
+        this.handleJoinStartChange = this.handleJoinStartChange.bind(this);
         //this.handleJoinTypeChange = this.handleJoinTypeChange.bind(this);
     }
     componentWillReceiveProps(nextProps){
         console.log("modal next props", nextProps);
         this.setState({
             joinParameters: nextProps.joinParameters,
-            selectedIndex: getSelectedPathIndex(nextProps.joinParameters.paths, nextProps.joinParameters.selectedPath)
-
+            selectedIndex: getSelectedPathIndex(nextProps.joinParameters.paths, nextProps.joinParameters.selectedPath),
+            joinStart: nextProps.joinParameters.selectedPath[0]
         })
     }
 
@@ -61,12 +63,17 @@ export default class JoinModal extends React.Component {
         joinParameters.joinTypes[index] = event.target.value;
         this.setState(joinParameters);
     }
+    handleJoinStartChange(event){
+        console.log('select entity', event.target.value);
+        this.props.onSelectJoinStart(event.target.value);
+    }
     render(){
         const {
             selectedPath,
             paths,
             joinKeys,
-            joinTypes
+            joinTypes,
+            joinedEntities
         } = this.state.joinParameters;
         console.log("show join ", this.props.joinParameters);
         let start= null;
@@ -104,9 +111,15 @@ export default class JoinModal extends React.Component {
                 <button onClick={this.handleSave}>Ok</button>
             </div>;
         }
+        let entities = null;
+        if(joinedEntities.length > 1){
+            let options = joinedEntities.map((p,i) => <option key={i} value={p}>{p}</option>);
+            entities = <select onChange={this.handleJoinStartChange} value={this.state.joinStart}>{options}</select>
+        }
         return (
             <div className="custom-modal-container">
                 <div className="custom-modal">
+                    {entities}<br/>
                     {path}
                     {keys}
                     {buttons}
@@ -120,11 +133,13 @@ JoinModal.propTypes = {
     joinParameters: React.PropTypes.shape({
         selectedPath: React.PropTypes.array.isRequired,
         paths: React.PropTypes.array.isRequired,
-        joinKeys: React.PropTypes.array.isRequired
+        joinKeys: React.PropTypes.array.isRequired,
+        joinedEntities: React.PropTypes.array.isRequired
     }).isRequired,
     onClose: React.PropTypes.func.isRequired,
     onSave: React.PropTypes.func.isRequired,
     confirmOnly: React.PropTypes.bool,
     index: React.PropTypes.number.isRequired,
-    onSelectPath: React.PropTypes.func.isRequired
+    onSelectPath: React.PropTypes.func.isRequired,
+    onSelectJoinStart: React.PropTypes.func.isRequired
 };

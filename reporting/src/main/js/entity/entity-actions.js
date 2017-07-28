@@ -72,6 +72,7 @@ export function getEntityRowCount(name){
             .then(response => {
                 if(response.ok) {
                     return response.json().then(json => {
+                        console.log('rowcount', json);
                         json.entityName = name;
                         return Promise.resolve(json)
                     });

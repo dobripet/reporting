@@ -7,6 +7,7 @@ import cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers.CustomQueryReque
 import cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers.SqlAndPreviewRequest;
 import cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers.SqlAndPreviewResponse;
 import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.PropertyStatistics;
+import cz.zcu.fav.kiv.dobripet.reporting.model.statistics.RowCount;
 import cz.zcu.fav.kiv.dobripet.reporting.service.BuilderService;
 import cz.zcu.fav.kiv.dobripet.reporting.service.StatisticsService;
 import cz.zcu.fav.kiv.dobripet.reporting.utils.InvalidDataException;
@@ -73,10 +74,12 @@ public class ApiController {
     //@CrossOrigin(origins = "http://localhost:8080")
     @GetMapping("/entities/{entityName}/stats/rowcount")
     public ResponseEntity<?>  getEntityRowCount(@PathVariable String entityName) throws JsonProcessingException {
-        long rowCount = statisticsService.getEntityRowCount(entityName);
-        log.debug("GET ENTITY: "+entityName+", ROW COUNT: " +rowCount);
-        return ResponseEntity.ok("{\"rowCount\":"+rowCount+"}");
+        RowCount rowCount = statisticsService.getEntityRowCount(entityName);
+        log.debug("GET ENTITY: "+entityName+", ROW COUNT: " +rowCount.getRowCount());
+        //little workaround
+        return ResponseEntity.ok(rowCount);
         //return JSONWrapper.wrapObjectToString("rowCount", rowCount);
+        //"\"rowCount\":"+rowCount
     }
 
     //@CrossOrigin(origins = "http://localhost:8080")

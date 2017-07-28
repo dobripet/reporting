@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 import JoinSection from './join-section';
-import { saveJoinEdit, openJoinEdit, closeJoinEdit, selectJoinPath } from './join-actions';
+import { saveJoinEdit, openJoinEdit, closeJoinEdit, selectJoinPath, selectJoinStart } from './join-actions';
 
 const mapStateToProps = (state) =>{
     return {
         parameters: state.join.parameters,
         editParameters: state.join.editParameters,
+        //selectedEntity: state.join.selectedEntity,
+        joinedEntities: state.join.joinedEntities,
         editIndex: state.join.editIndex,
         confirmOnly: state.join.confirmOnly,
         loading:  state.join.loading,
@@ -25,6 +27,9 @@ const mapDispatchToProps = (dispatch) =>{
         },
         selectJoinPath: (selectedPath) => {
             dispatch(selectJoinPath(selectedPath))
+        },
+        selectJoinStart: (joinStart) => {
+            dispatch(selectJoinStart(joinStart))
         }
     }
 };

@@ -79,7 +79,7 @@ export default class EntitySection extends React.Component{
             <div className="entity-section">
                 <div className="scrollable-content">
                 <Loader show={loading}>
-                    <Search id="search-input" placeholder="Search table or column" onChange={this.doSearch} focus={true}/>
+                    <Search id="search-input" placeholder="Search table or column" onChange={this.doSearch} focus={true} value={search}/>
                         {entityList}
                 </Loader>
                 </div>

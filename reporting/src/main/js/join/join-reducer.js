@@ -1,11 +1,14 @@
 import { COLUMN_LIST_ADD_POST } from '../column/column-actions'
-import { JOIN_EDIT_OPEN, JOIN_EDIT_SAVE, JOIN_EDIT_CLOSE, JOIN_EDIT_SELECT_PATH, JOIN_SPLIT_JOIN, JOIN_CREATE_JOIN, JOIN_REMOVE_ENTITY} from './join-actions'
+import { JOIN_EDIT_OPEN, JOIN_EDIT_SAVE, JOIN_EDIT_CLOSE, JOIN_EDIT_SELECT_PATH, JOIN_SPLIT_JOIN, JOIN_CREATE_JOIN, JOIN_REMOVE_ENTITY, JOIN_EDIT_JOIN_START} from './join-actions'
 import { MENU_CLEAR, MENU_LOAD_QUERY } from '../menu/menu-actions'
-import { updateObject, updateItemInArray, deepCloneJoinParameters, getPathsBetween, createJoinParameter, getJoinKeysFromPath, createJoinTypes } from '../utils/utils'
+import { updateObject, updateItemInArray, deepCloneJoinParameters, getPathsBetween, createJoinParameter, getJoinKeysFromPath, createJoinTypes, getJoinedEntities } from '../utils/utils'
 import {INNER_JOIN} from './join-types'
 import typeToReducer from 'type-to-reducer'
 const initialState = {
+    //joinTree: {},
     parameters: [],
+    //joinedEntities: [],
+    //selectedEntity: null,
     editParameters: null,
     editIndex: null,
     confirmOnly: false,
@@ -69,7 +72,7 @@ const removeEntity = (parameters, payload) =>{
     }
     return obj;
 };
-const getAddPostProcessed = (payload) =>{
+/*const getAddPostProcessed = (payload) =>{
     let obj = {
         loading: false,
         parameters: payload.builder.joinParameters
@@ -80,7 +83,7 @@ const getAddPostProcessed = (payload) =>{
         obj.editIndex = payload.builder.joinParameters.length-1;
     }
     return obj;
-};
+};*/
 const splitJoin = (parameters, payload) => {
     let index = payload.index;
     let parameter = parameters[payload.parameterIndex];
@@ -128,39 +131,50 @@ const createJoin = (parameters, payload) => {
         if(result.openModal){
             obj.confirmOnly = true;
             obj.editParameters = deepCloneJoinParameters(result.parameter);
+            obj.editParameters.joinedEntities = getJoinedEntities(parameters);
             obj.editIndex = obj.parameters.length-1;
         }
+        obj.lastJoinFailed = false;
     }else{
         //path not found
-        obj.parameters = [...parameters];
+        //obj.parameters = [...parameters];
         obj.lastJoinFailed = true;
     }
     console.log('joinparam', result, obj);
     return obj;
 };
+const changeJoinStart = (param, payload) => {
+    let result = createJoinParameter(payload.entities, payload.joinStart, param.selectedPath[param.selectedPath.length-1], INNER_JOIN);
+    console.log('newpar', result.parameter);
+    return result.parameter;
+    //return createJoinParameter(payload.entities, payload.joinStart, param.selectedPath[param.selectedPath.length-1], INNER_JOIN);
+};
 export default typeToReducer({
-    [COLUMN_LIST_ADD_POST]: {
-        PENDING: (state) => (
-            updateObject(state, {
-                editParameters: null,
-                loading: true,
-                error: null
-            })
-        ),
-        REJECTED: (state, action) => (
-            updateObject(state, {
-                editParameters: null,
-                loading: false,
-                error: action.payload.error
-            })
-        ),
-        FULFILLED: (state, action) => (
-            updateObject(state, getAddPostProcessed(action.payload))
-        ),
-    },
-    [JOIN_EDIT_OPEN]:(state, action) => (
+        /*[COLUMN_LIST_ADD_POST]: {
+         PENDING: (state) => (
+         updateObject(state, {
+         editParameters: null,
+         loading: true,
+         error: null
+         })
+         ),
+         REJECTED: (state, action) => (
+         updateObject(state, {
+         editParameters: null,
+         loading: false,
+         error: action.payload.error
+         })
+         ),
+         FULFILLED: (state, action) => (
+         updateObject(state, getAddPostProcessed(action.payload))
+         ),
+         },*/
+    [JOIN_EDIT_OPEN]: (state, action) => (
         updateObject(state, {
-            editParameters: deepCloneJoinParameters(state.parameters[action.payload.index]),
+            editParameters:  updateObject(
+                deepCloneJoinParameters(state.parameters[action.payload.index]),
+                {joinedEntities : getJoinedEntities(state.parameters, action.payload.index)}
+                ),
             confirmOnly: false,
             editIndex: action.payload.index
         })
@@ -170,7 +184,7 @@ export default typeToReducer({
             parameters: updateItemInArray(state.parameters, action.payload.index, param => {
                 console.log('cb ', param, deepCloneJoinParameters(action.payload.joinParameters));
                 return updateObject(param, deepCloneJoinParameters(action.payload.joinParameters))
-                }),
+            }),
             editParameters: null
         })
     ),
@@ -180,7 +194,10 @@ export default typeToReducer({
         })
     ),
     [JOIN_EDIT_SELECT_PATH]: (state, action) => {
-        return updateObject(state, {editParameters: editSelectPath(state.editParameters, action.payload)})
+        return updateObject(state, {editParameters: updateObject(
+            editSelectPath(state.editParameters, action.payload),
+            {joinedEntities : getJoinedEntities(state.parameters, action.payload.index)}
+        )})
     },
     [JOIN_REMOVE_ENTITY]: (state, action) => (
         updateObject(state, removeEntity(state.parameters, action.payload))
@@ -198,5 +215,12 @@ export default typeToReducer({
     ),
     [MENU_LOAD_QUERY]:(state, action) => (
         updateObject(state, {parameters: action.payload.parameters.map(p=>deepCloneJoinParameters(p))})
+    ),
+    [JOIN_EDIT_JOIN_START]:(state,action) => (
+        updateObject(state, {editParameters: updateObject(
+            deepCloneJoinParameters(changeJoinStart(state.editParameters, action.payload)),
+            {joinedEntities : getJoinedEntities(state.parameters, action.payload.index)}
+        )})
     )
+
 }, initialState);

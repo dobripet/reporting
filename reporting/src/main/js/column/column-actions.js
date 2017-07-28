@@ -204,7 +204,7 @@ export function removeColumnFromColumnList(columnIndex){
                         payload: columnIndex
                     });
                 },
-                `Removing ${column.propertyName} will delete all join following ${column.entityName}. Proceed?`,
+                `Removing ${column.propertyName} will delete all joins following ${column.entityName}. Proceed?`,
                 TYPE_CONFIRM));
             return;
         }

@@ -43,7 +43,8 @@ export function save (name, saveAs) {
             method = 'PUT';
         }
         dispatch({
-            type: MENU_SAVE,
+            type:
+            MENU_SAVE,
             payload: fetch(url, {
                 method,
                 headers: {

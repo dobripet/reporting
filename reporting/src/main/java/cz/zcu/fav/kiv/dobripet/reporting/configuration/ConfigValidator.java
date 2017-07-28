@@ -58,7 +58,7 @@ public class ConfigValidator {
     public void validate(){
         String queryTables = "SELECT TABLE_NAME " +
                 "FROM INFORMATION_SCHEMA.TABLES " +
-                "WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG = :databaseName";
+                "WHERE (TABLE_TYPE = 'BASE TABLE' OR TABLE_TYPE = 'VIEW') AND TABLE_CATALOG = :databaseName";
         String queryColumns = "SELECT COLUMN_NAME " +
                 "FROM INFORMATION_SCHEMA.COLUMNS " +
                 "WHERE TABLE_NAME = :tableName";

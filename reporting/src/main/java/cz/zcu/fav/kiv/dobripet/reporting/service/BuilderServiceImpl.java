@@ -177,6 +177,44 @@ public class BuilderServiceImpl implements BuilderService {
         }
     }
 
+    private int browseChildren(List<JoinParameters> joinParameters, Map<String, String> entityAliases , int index, StringBuilder joins, boolean first){
+        addToJoin(joinParameters.get(index), entityAliases, joins, first);
+        String entityEnd = joinParameters.get(index).getSelectedPath().get(joinParameters.get(index).getSelectedPath().size()-1);
+        int count = 0;
+        for(int i = 0; i < joinParameters.size(); i++){
+            //find children
+            if(entityEnd.equals(joinParameters.get(i).getSelectedPath().get(0))) {
+                StringBuilder tmpJoins = new StringBuilder();
+                if(browseChildren(joinParameters, entityAliases, i, tmpJoins, false) > 1){
+                    //surround by brackets if there is more then one direct child
+                    /*tmpJoins.append(")");
+                    tmpJoins.insert(0,"(");*/
+                }
+                joins.append(tmpJoins.toString());
+                count++;
+            }
+        }
+        return count;
+    }
+
+
+    public void addToJoin(JoinParameters parameters, Map<String, String> entityAliases, StringBuilder joins, boolean first){
+       for(int i = 0; i <  parameters.getSelectedPath().size()-1; i++){
+            String entityName = parameters.getSelectedPath().get(i);
+            String targetEntityName = parameters.getSelectedPath().get(i+1);
+            //create unique table aliases
+            updateEntityAliases(entityAliases, entityName);
+            updateEntityAliases(entityAliases, targetEntityName);
+            //first entity is FROM
+            if(first && i == 0){
+                joins.append("\nFROM "+schemaName+"."+entityName+" " + entityAliases.get(entityName));
+            }
+            //JOIN and ON
+            joins.append("\n"+parameters.getJoinTypes().get(i)+" "+schemaName+"."+targetEntityName+" " + entityAliases.get(targetEntityName));
+            joins.append(createONFromJoinKeys(parameters.getJoinKeys().get(i), entityAliases.get(entityName), entityAliases.get(targetEntityName)));
+        }
+    }
+
     private String createJoinStringSelect(List<Column> columns, List<JoinParameters> joinParameters){
         StringBuilder sb = new StringBuilder();
         Map<String, String> entityAliases = new HashMap<>();
@@ -184,6 +222,31 @@ public class BuilderServiceImpl implements BuilderService {
         StringJoiner aliases = new StringJoiner(", ");
         //prepare joins
         StringBuilder joins = new StringBuilder();
+        //create tree from join parameters
+        boolean first = true;
+        for(int i = 0; i < joinParameters.size(); i++){
+            int parent = -1;
+            String entityName = joinParameters.get(i).getSelectedPath().get(0);
+            for(int y = 0; y < joinParameters.size(); y++){
+                if(entityName.equals(joinParameters.get(y).getSelectedPath().get(joinParameters.get(y).getSelectedPath().size()-1))) {
+                    parent = y;
+                }
+            }
+            //root, browse recursively
+            if(parent == -1){
+                StringBuilder tmpJoins  = new StringBuilder();
+                if(browseChildren(joinParameters, entityAliases, i, tmpJoins, first) > 1) {
+                    //surround by brackets if there is more then one direct child
+                    /*tmpJoins.append(")");
+                    tmpJoins.insert(0, "(");*/
+                }
+                //append to whole join, if there are no children, tmpJoin will be empty String
+                joins.append(tmpJoins.toString());
+                if(first){
+                    first = false;
+                }
+            }
+        }/*
         for(int x = 0; x <  joinParameters.size(); x++){
             JoinParameters parameters = joinParameters.get(x);
             for(int i = 0; i <  parameters.getSelectedPath().size()-1; i++){
@@ -200,7 +263,7 @@ public class BuilderServiceImpl implements BuilderService {
                 joins.append("\n"+parameters.getJoinTypes().get(i)+" "+schemaName+"."+targetEntityName+" " + entityAliases.get(targetEntityName));
                 joins.append(createONFromJoinKeys(parameters.getJoinKeys().get(i), entityAliases.get(entityName), entityAliases.get(targetEntityName)));
             }
-        }
+        }*/
         //prepare select columns
         for(Column column : columns){
             String title = column.getTitle();

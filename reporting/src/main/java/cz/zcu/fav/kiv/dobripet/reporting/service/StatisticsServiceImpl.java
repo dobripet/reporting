@@ -124,8 +124,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public long getEntityRowCount(String entityName) {
-        return statisticsDAO.getEntityRowCount(entityName);
+    public RowCount getEntityRowCount(String entityName) {
+        return new RowCount(statisticsDAO.getEntityRowCount(entityName));
     }
 
 
