@@ -17,7 +17,6 @@ export function loadAllQueries () {
                     if (response.ok) {
                         return response.json().then(json => {
                             console.log('save ', json);
-                            //todo dispatch fading info that its ok
                             return Promise.resolve(json)
                         });
                     } else {
@@ -57,10 +56,11 @@ export function save (name, saveAs) {
                     parameters: state.join.parameters
                 })
             }).then(response => {
-                if (response.status === 201) {
+                if (response.status === 201 || response.status === 200) {
                     return response.json().then(json => {
                         console.log('save ', json);
                         //todo dispatch fading info that its ok
+                        dispatch(savedOk());
                         return Promise.resolve(json)
                     });
                 } else {
@@ -100,5 +100,12 @@ export function newQuery () {
             type: MENU_NEW_QUERY,
             payload: {}
         })
+    }
+}
+export const SHOW_SAVED_OK = 'SHOW_SAVED_OK';
+export function savedOk () {
+    return {
+        type: SHOW_SAVED_OK,
+        payload: {}
     }
 }

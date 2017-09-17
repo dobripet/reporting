@@ -89,13 +89,20 @@ const splitJoin = (parameters, payload) => {
     let parameter = parameters[payload.parameterIndex];
     //create new selected paths
     let selectedPathOne = parameter.selectedPath.slice(0, index+1);
-    let selectedPathTwo = parameter.selectedPath.slice(index+1, parameter.selectedPath.length);
+    let selectedPathTwo = parameter.selectedPath.slice(index, parameter.selectedPath.length);
     if(!Array.isArray(parameter.joinKeys)){
         throw 'Join parameter joinKeys is not array!'
     }
     //create new join keys
-    let joinKeysOne = parameter.selectedPath.slice(0, index);
-    let joinKeysTwo = parameter.selectedPath.slice(index, parameter.selectedPath.length);
+    let joinKeysOne = parameter.joinKeys.slice(0, index);
+    let joinKeysTwo = parameter.joinKeys.slice(index, parameter.selectedPath.length);
+    if(!Array.isArray(parameter.joinTypes)){
+        throw 'Join parameter joinTypes is not array!'
+    }
+
+    let joinTypesOne = parameter.joinTypes.slice(0, index);
+    let joinTypesTwo = parameter.joinTypes.slice(index, parameter.selectedPath.length);
+    console.log('parameter', parameter);
     //recalculate all possible paths
     let pathsOne = getPathsBetween(payload.entities, selectedPathOne[0], selectedPathOne[selectedPathOne.length-1]);
     let pathsTwo = getPathsBetween(payload.entities, selectedPathTwo[0], selectedPathTwo[selectedPathTwo.length-1]);
@@ -103,22 +110,24 @@ const splitJoin = (parameters, payload) => {
     let newJoinOne = {
         selectedPath: selectedPathOne,
         joinKeys: joinKeysOne,
+        joinTypes: joinTypesOne,
         paths: pathsOne
     };
 
     let newJoinTwo = {
         selectedPath: selectedPathTwo,
         joinKeys: joinKeysTwo,
+        joinTypes: joinTypesTwo,
         paths: pathsTwo
     };
     console.log('new joins from split ', newJoinOne, newJoinTwo);
     let newParameters = [];
-    for (let i = 0; i < parameter.length; i++){
-        if(i=== payload.parameterIndex){
+    for (let i = 0; i < parameters.length; i++){
+        if(i === payload.parameterIndex){
             newParameters.push(deepCloneJoinParameters(newJoinOne));
             newParameters.push(deepCloneJoinParameters(newJoinTwo));
         }else{
-            newParameters.push(deepCloneJoinParameters(parameter[i]));
+            newParameters.push(deepCloneJoinParameters(parameters[i]));
         }
     }
     return newParameters;
@@ -196,7 +205,7 @@ export default typeToReducer({
     [JOIN_EDIT_SELECT_PATH]: (state, action) => {
         return updateObject(state, {editParameters: updateObject(
             editSelectPath(state.editParameters, action.payload),
-            {joinedEntities : getJoinedEntities(state.parameters, action.payload.index)}
+            {joinedEntities : getJoinedEntities(state.parameters, state.editIndex)}
         )})
     },
     [JOIN_REMOVE_ENTITY]: (state, action) => (
@@ -219,7 +228,7 @@ export default typeToReducer({
     [JOIN_EDIT_JOIN_START]:(state,action) => (
         updateObject(state, {editParameters: updateObject(
             deepCloneJoinParameters(changeJoinStart(state.editParameters, action.payload)),
-            {joinedEntities : getJoinedEntities(state.parameters, action.payload.index)}
+            {joinedEntities : getJoinedEntities(state.parameters, state.editIndex)}
         )})
     )
 

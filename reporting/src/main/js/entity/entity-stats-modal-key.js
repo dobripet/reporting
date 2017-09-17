@@ -18,16 +18,17 @@ export default class EntityStatsModalKey extends React.Component{
         let keys = this.props.keys;
         let name = this.props.name;
         let items = null;
+        let glyphClass = "glyphicon glyphicon-menu-down cursor-pointer";
         if(this.state.expanded) {
-            items = keys.map((fk, i) => <li key={i}>{fk.localColumnName} -> {fk.foreignColumnName}</li>);
-            items = <ul>{items}</ul>;
+            glyphClass = "glyphicon glyphicon-menu-up cursor-pointer";
+            items = keys.map((fk, i) => <span key={i} className="padded-list-item">{fk.localColumnName} -> {fk.foreignColumnName}</span>);
         }
         return (
-            <li key={name}>
-                <span onClick={this.handleExpand} > + </span>
-                <span onClick={this.handleExpand}>{name}</span>
+            <div key={name} className="padded-list-item">
+                <span onClick={this.handleExpand} className={glyphClass}></span>
+                <span onClick={this.handleExpand} className="cursor-pointer" style={{marginLeft:"5px"}}>{name}</span>
                 {items}
-            </li>
+            </div>
             )
 
     }

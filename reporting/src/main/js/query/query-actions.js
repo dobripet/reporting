@@ -13,7 +13,8 @@ export function updateSqlAndPreview () {
                     },
                     columns: state.column.columns
                 }
-            })
+            });
+            return;
         }
         //get data froms server
         dispatch({

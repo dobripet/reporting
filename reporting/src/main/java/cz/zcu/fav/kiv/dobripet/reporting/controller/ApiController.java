@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -87,7 +88,11 @@ public class ApiController {
     public ResponseEntity<?> getPropertyStats(@PathVariable String entityName, @PathVariable String propertyName) throws JsonProcessingException {
         PropertyStatistics statistic = statisticsService.getStatistics(entityName, propertyName);
         log.debug("GET ENTITY: "+entityName+", PROPERTY: " + propertyName + ", STATISTIC: " + statistic);
-        return ResponseEntity.ok(statistic);
+        if(statistic!= null) {
+            return ResponseEntity.ok(statistic);
+        } else{
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
         //return JSONWrapper.wrapObjectToString("statistic", statistic);
     }
 /*

@@ -86,13 +86,15 @@ export const ENTITY_PROPERTY_STATS_FETCH = 'ENTITY_PROPERTY_STATS_FETCH';
 export function getEntityPropertyStats(entityName, propertyName){
     return dispatch => dispatch({
         type: ENTITY_PROPERTY_STATS_FETCH,
-        payload: fetch(`${BASE_URL}/api/entities${entityName}/properties/${propertyName}/stats`)
+        payload: fetch(`${BASE_URL}/api/entities/${entityName}/properties/${propertyName}/stats`)
             .then(response => {
-                if(response.ok) {
+                console.log('response' ,response);
+                if(response.status === 204) {
+                    return Promise.resolve({ entityName, propertyName, statistic: null });
+
+                } else if (response.ok){
                 return response.json().then(json => {
-                    json.entityName = entityName;
-                    json.propertyName = propertyName;
-                    return Promise.resolve(json)
+                    return Promise.resolve({ entityName, propertyName, statistic: json})
                 });
                 } else {
                     return response.json().then(err => Promise.reject(err));

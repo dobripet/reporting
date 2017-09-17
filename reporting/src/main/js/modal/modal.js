@@ -25,18 +25,18 @@ export default class Modal extends React.Component {
             case TYPE_CONFIRM: {
                 className="alert alert-info";
                 buttons = <div>
-                    <button onClick={this.handleConfirm}>Ok</button>
-                    <button onClick={this.handleDecline}>Cancel</button>
+                    <button onClick={this.handleConfirm} className="btn btn-success" style={{marginRight:"10px"}}>Ok</button>
+                    <button onClick={this.handleDecline} className="btn btn-info" >Cancel</button>
                 </div>
             } break;
             case TYPE_ERROR: {
                 console.log("wtf modal");
                 className="alert alert-danger";
-                buttons = <div><button onClick={this.handleConfirm}>Ok</button></div>
+                buttons = <div><button onClick={this.handleConfirm} className="btn btn-primary">Ok</button></div>
             } break;
             default : {
                 className="alert alert-success";
-                buttons = <div><button onClick={this.handleConfirm}>Ok</button></div>
+                buttons = <div><button onClick={this.handleConfirm} className="btn btn-primary">Ok</button></div>
             } break;
         }
         return (

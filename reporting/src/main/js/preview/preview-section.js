@@ -51,20 +51,26 @@ export default class PreviewSection extends React.Component{
                     </tbody>
                 </table>
         }*/
-        console.log(data);
+        console.log('preview', data);
         let header = columnNames.map((name, i) => <th key={i}>{name}</th>);
-        let rows = data.map((row, i) => {
-            if(Array.isArray(row)) {
-                let columns = row.map((column, j) => <td key={j}>{normalizeForTableCell(column)}</td>);
-                return <tr key={i}>{columns}</tr>;
-            } else {
-                return <tr key={i}><td>{normalizeForTableCell(row)}</td></tr>
-            }
-        });
+        let rows = null;
+        if(data) {
+            rows = data.map((row, i) => {
+                if (Array.isArray(row)) {
+                    let columns = row.map((column, j) => <td key={j}>{normalizeForTableCell(column)}</td>);
+                    return <tr key={i}>{columns}</tr>;
+                } else {
+                    return <tr key={i}>
+                        <td>{normalizeForTableCell(row)}</td>
+                    </tr>
+                }
+            });
+        }
         return (
             <div className="preview-section">
                 <Loader loaded={!loading}>
-                    <table>
+                    <table className="table-bordered">
+                        <caption>Preview</caption>
                         <thead>
                             <tr>
                                 {header}

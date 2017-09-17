@@ -1,6 +1,8 @@
 import React from 'react'
 import LoadModal from './load-modal'
 import SaveModal from './save-modal'
+import Notification from '../utils/notification'
+//import 'react-notifications/lib/notifications.css'
 
 export default class MenuSection extends React.Component{
     constructor(props) {
@@ -8,7 +10,8 @@ export default class MenuSection extends React.Component{
         this.state = {
             showLoadModal: false,
             showSaveModal: false,
-            isSaveAs: false
+            isSaveAs: false,
+            showNotification: false
         };
         // bindings
         this.handleClear  = this.handleClear.bind(this);
@@ -19,7 +22,14 @@ export default class MenuSection extends React.Component{
         this.handleOpenSaveModal  = this.handleOpenSaveModal.bind(this);
         this.handleOpenSaveAsModal  = this.handleOpenSaveAsModal.bind(this);
         this.handleCloseSaveModal  = this.handleCloseSaveModal.bind(this);
+        this.dismissNotification  = this.dismissNotification.bind(this);
         this.handleNew  = this.handleNew.bind(this);
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.showSavedOK != this.props.showSavedOK && nextProps.showSavedOK){
+            this.setState({showNotification : true});
+            setTimeout(this.dismissNotification, 2000);
+        }
     }
     handleClear (){
         this.props.clear();
@@ -62,6 +72,9 @@ export default class MenuSection extends React.Component{
     handleNew (){
         this.props.newQuery();
     }
+    dismissNotification(){
+        this.setState({showNotification: false});
+    }
     render() {
         const {
             showLoadModal,
@@ -77,16 +90,22 @@ export default class MenuSection extends React.Component{
             saveModal = <SaveModal onClose={this.handleCloseSaveModal} onSave={this.handleSave}/>
         }
         console.log('wtf name', this.props.name);
+        let btnStyle = {marginRight:"10px", verticalAlign: "text-bottom"};
+        let notification = null;
+        //}
         return (
             <div className="menu-section">
                 {loadModal}
                 {saveModal}
-                <button onClick={this.handleNew}>New</button>
-                <button onClick={this.handleOpenLoadModal}>Load</button>
-                <button onClick={this.handleOpenSaveModal}>Save</button>
-                <button onClick={this.handleOpenSaveAsModal}>Save As</button>
-                <button onClick={this.handleClear}>Clear</button>
-                {this.props.name}
+                <button onClick={this.handleNew}  className="btn btn-success" style={btnStyle}><span style={{fontWeight:"bold"}}>New</span></button>
+                <button onClick={this.handleOpenLoadModal} className="btn btn-warning" style={btnStyle}><span style={{fontWeight:"bold"}}>Load</span></button>
+                <button onClick={this.handleOpenSaveModal} className="btn btn-primary" style={btnStyle}><span style={{fontWeight:"bold"}}>Save</span></button>
+                <button onClick={this.handleOpenSaveAsModal} className="btn btn-primary" style={btnStyle}><span style={{fontWeight:"bold"}}>Save As</span></button>
+                <button onClick={this.handleClear} className="btn btn-info" style={btnStyle}><span style={{fontWeight:"bold"}}>Clear</span></button>
+                <span style={{fontWeight:"bold", fontSize:"30px"}}>{this.props.name}</span>
+                <Notification
+                    show={this.state.showNotification}
+                />
             </div>
         );
     }

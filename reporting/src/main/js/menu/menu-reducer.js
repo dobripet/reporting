@@ -1,4 +1,4 @@
-import { MENU_SAVE, MENU_LOAD_ALL_QUERIES, MENU_LOAD_QUERY, MENU_NEW_QUERY} from './menu-actions'
+import { MENU_SAVE, MENU_LOAD_ALL_QUERIES, MENU_LOAD_QUERY, MENU_NEW_QUERY, SHOW_SAVED_OK} from './menu-actions'
 import { updateObject, formatDateTime } from '../utils/utils'
 import typeToReducer from 'type-to-reducer'
 const initialState = {
@@ -6,7 +6,8 @@ const initialState = {
     id: null,
     queries : [],
     name: '',
-    loading: false
+    loading: false,
+    showSavedOK: false
 };
 
 export default typeToReducer({
@@ -14,7 +15,8 @@ export default typeToReducer({
         PENDING: (state) => (
             updateObject(state, {
                 loading: true,
-                error: null
+                error: null,
+                showSavedOK: false
             })
         ),
         REJECTED: (state, action) => (
@@ -27,7 +29,8 @@ export default typeToReducer({
             updateObject(state, {
                 loading: false,
                 id: action.payload.id,
-                name: action.payload.queryName
+                name: action.payload.queryName,
+                showSavedOK: false
             })
         ),
     },
@@ -35,32 +38,42 @@ export default typeToReducer({
         PENDING: (state) => (
             updateObject(state, {
                 loading: true,
-                error: null
+                error: null,
+                showSavedOK: false
             })
         ),
         REJECTED: (state, action) => (
             updateObject(state, {
                 loading: false,
-                error: action.payload.error
+                error: action.payload.error,
+                showSavedOK: false
             })
         ),
         FULFILLED: (state, action) => (
             updateObject(state, {
                 loading: false,
-                queries: action.payload
+                queries: action.payload,
+                showSavedOK: false
             })
         ),
     },
     [MENU_LOAD_QUERY]:(state, action) => (
         updateObject(state, {
             name: action.payload.queryName,
-            id: action.payload.id
+            id: action.payload.id,
+            showSavedOK: false
         })
     ),
     [MENU_NEW_QUERY]:(state, action) => (
         updateObject(state, {
             name: '',
-            id: null
+            id: null,
+            showSavedOK: false
+        })
+    ),
+    [SHOW_SAVED_OK]:(state, action) => (
+        updateObject(state, {
+            showSavedOK: true
         })
     )
 }, initialState);

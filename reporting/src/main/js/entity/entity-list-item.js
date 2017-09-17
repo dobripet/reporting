@@ -10,7 +10,8 @@ export default class EntityListItem extends React.Component{
         this.state = {
             expanded: false,
             showStatsTooltip: false,
-            showStatsModal: false
+            showStatsModal: false,
+            selected: this.initSelected(props)
         };
         // bindings
         this.handleExpand  = this.handleExpand.bind(this);
@@ -25,10 +26,28 @@ export default class EntityListItem extends React.Component{
         this.hideStatsTooltip = this.hideStatsTooltip.bind(this);
         this.hideStatsModal = this.hideStatsModal.bind(this);
         this.getEntityPropertyStats = this.getEntityPropertyStats.bind(this);
+        this.handlePropertySelectChange = this.handlePropertySelectChange.bind(this);
+        this.initSelected = this.initSelected.bind(this);
     }
-    componentDidMount() {
+    /*componentDidMount() {
+    }*/
+    componentWillReceiveProps(nextProps){
+        if(Object.keys(this.state.selected).length !==  Object.keys(nextProps.entity.properties).length){
+            this.setState({selected: this.initSelected(nextProps)});
+            console.log('props', nextProps, Object.keys(nextProps.entity.properties).length);
+        }
 
+        console.log('ttt', nextProps);
     }
+
+    initSelected(props){
+        let selected = {};
+        for(let property in props.entity.properties){
+            selected[property] = false;
+        }
+        return selected;
+    }
+
     getEntityPropertyStats(propertyName){
         this.props.getEntityPropertyStats(this.props.entity.name, propertyName);
     }
@@ -48,7 +67,8 @@ export default class EntityListItem extends React.Component{
     handleAdd() {
         console.log("add entity");
         //little workaround to add multiple properties
-        this.props.onAdd(this.props.entity, Object.keys(this.props.entity.properties).map(k => this.props.entity.properties[k]));
+        this.props.onAdd(this.props.entity, Object.keys(this.props.entity.properties).filter(k => this.state.selected[k]).map(k => this.props.entity.properties[k]));
+        this.setState({selected: this.initSelected(this.props)});
     }
     handlePropertyAdd(property) {
         console.log("add prop", property);
@@ -81,25 +101,42 @@ export default class EntityListItem extends React.Component{
         console.log("close modal");
         this.hideStatsModal();
     }
+    handlePropertySelectChange (property) {
+        console.log('pp', property);
+        let selected = this.state.selected;
+        selected[property] = !selected[property];
+        this.setState({selected});
+    }
+
     render() {
         const {
             entity,
             loading,
             getEntityRowCount
         } = this.props;
-        let propertyList = null;
+        //let propertyList = null;
+        let propertyItems = null;
+        let glyphClass = "glyphicon glyphicon-menu-down cursor-pointer";
         if(this.state.expanded){
-            const propertyItems = Object.keys(entity.properties).sort().map(property =>
+            glyphClass = "glyphicon glyphicon-menu-up cursor-pointer";
+            propertyItems = Object.keys(entity.properties).sort().map(property =>
                 <PropertyListItem
                     key={`${entity.name}-${property}`}
                     getEntityPropertyStats={this.getEntityPropertyStats}
                     property={entity.properties[property]}
                     onAdd={this.handlePropertyAdd}
+                    onSelectChange={this.handlePropertySelectChange}
+                    getEntityRowCount={getEntityRowCount}
+                    entityName={entity.name}
+                    rowCount={entity.rowCount}
                     loading={loading}
+                    selected={this.state.selected[property]}
                 />);
-            propertyList = <ul>{propertyItems}</ul>
+            //propertyList = {propertyItems}
         }
+        //console.log('selected', this.state.selected);
         let stats = null;
+        //entity && entity.name === 'Warehouses' ||
         if(this.state.showStatsTooltip){
             stats = <EntityStatsTooltip entity={entity} getEntityRowCount={getEntityRowCount}/>;
         }
@@ -107,13 +144,15 @@ export default class EntityListItem extends React.Component{
             stats = <EntityStatsModal entity={entity} onClose={this.handleCloseModal} getEntityRowCount={getEntityRowCount}/>;
         }
         return (
-            <div>
-                <span onClick={this.handleExpand} > + </span>
-                <span onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>{entity.name}</span>
-                <span onClick={this.handleStats} > iiii</span>
-                <button onClick={this.handleAdd}>Add</button>
+            <div className="list-item">
+                <span onClick={this.handleExpand} className={glyphClass}></span>
+                <span onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}
+                      onClick={this.handleExpand} className="custom-item cursor-pointer" style={{fontSize:"18px"}}>{entity.name}</span>
+                <span onClick={this.handleStats} className="custom-item glyphicon glyphicon-info-sign cursor-pointer primary-color" style={{fontSize:"18px"}}></span>
+                <button onClick={this.handleAdd} className="custom-item btn btn-primary btn-xs" style={{verticalAlign:"text-bottom"}}>
+                    <span className="glyphicon glyphicon-plus-sign cursor-pointer"></span><span className="custom-item">All</span></button>
                 {stats}
-                {propertyList}
+                {propertyItems}
             </div>
         );
     }

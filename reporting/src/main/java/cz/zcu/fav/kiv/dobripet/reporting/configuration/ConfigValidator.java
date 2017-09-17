@@ -2,6 +2,7 @@ package cz.zcu.fav.kiv.dobripet.reporting.configuration;
 
 import cz.zcu.fav.kiv.dobripet.reporting.model.Config;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Entity;
+import cz.zcu.fav.kiv.dobripet.reporting.model.ForeignKey;
 import cz.zcu.fav.kiv.dobripet.reporting.model.Property;
 import cz.zcu.fav.kiv.dobripet.reporting.service.BuilderService;
 import cz.zcu.fav.kiv.dobripet.reporting.utils.GraphPaths;
@@ -80,6 +81,21 @@ public class ConfigValidator {
                     }
                 } else{
                     log.warn("Table "+tableName + " is not present in the database. Ignoring that table.");
+                    //remove all foreign keys
+                    if(config.getEntities().get(tableName).getReferenceMap() != null){
+                        for(String foreignTable : config.getEntities().get(tableName).getReferenceMap().keySet()){
+                            if(config.getEntities().get(foreignTable) != null && config.getEntities().get(foreignTable).getReferredByMap() != null) {
+                                config.getEntities().get(foreignTable).getReferredByMap().remove(tableName);
+                            }
+                        }
+                    }
+                    if(config.getEntities().get(tableName).getReferenceMap() != null){
+                        for(String foreignTable : config.getEntities().get(tableName).getReferredByMap().keySet()){
+                            if(config.getEntities().get(foreignTable) != null && config.getEntities().get(foreignTable).getReferenceMap() != null) {
+                                config.getEntities().get(foreignTable).getReferenceMap().remove(tableName);
+                            }
+                        }
+                    }
                     //remove from config
                     config.getEntities().remove(tableName);
                 }
@@ -96,6 +112,20 @@ public class ConfigValidator {
                     }
                 }
 
+            }
+
+
+            //TODO foreign keys validation
+            for(String tableName : config.getEntities().keySet()){
+                for(String foreignTable : config.getEntities().get(tableName).getReferenceMap().keySet()){
+                    Iterator<ForeignKey> iterator = config.getEntities().get(tableName).getReferenceMap().get(foreignTable).iterator();
+                    checkForeignKeys(tableName, foreignTable, iterator);
+
+                }
+                for(String foreignTable : config.getEntities().get(tableName).getReferredByMap().keySet()){
+                    Iterator<ForeignKey> iterator = config.getEntities().get(tableName).getReferredByMap().get(foreignTable).iterator();
+                    checkForeignKeys(tableName, foreignTable, iterator);
+                }
             }
 
             //test muj temp
@@ -115,6 +145,23 @@ public class ConfigValidator {
 */
         }catch(NoResultException e){
             log.error("validate failed due NoResultException", e);
+        }
+    }
+    private void checkForeignKeys(String tableName, String foreignTable, Iterator<ForeignKey> iterator){
+        while(iterator.hasNext()){
+            ForeignKey foreignKey = iterator.next();
+            if(config.getEntities().get(foreignTable) != null &&
+                    config.getEntities().get(foreignTable).getProperties() != null &&
+                    !config.getEntities().get(foreignTable).getProperties().keySet().contains(foreignKey.getForeignColumnName())){
+                iterator.remove();
+                log.warn("Foreign key columns "+foreignKey.getLocalColumnName() + " -> " +foreignKey.getForeignColumnName() +" between tables " +tableName + " and " + foreignTable + " are not valid columns. Ignoring that foreign key.");
+            }
+            if(config.getEntities().get(tableName) != null &&
+                    config.getEntities().get(tableName).getProperties() != null &&
+                    !config.getEntities().get(tableName).getProperties().keySet().contains(foreignKey.getLocalColumnName())){
+                log.warn("Foreign key columns "+foreignKey.getLocalColumnName() + " -> " +foreignKey.getForeignColumnName() +" between tables " +tableName + " and " + foreignTable + " are not valid columns. Ignoring that foreign key.");
+                iterator.remove();
+            }
         }
     }
 }

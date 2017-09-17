@@ -13,6 +13,18 @@ export function normalizeForTableCell(object){
     return object;
 }
 
+export function roundDateTime(datetime){
+    let timestamp = datetime;
+    if(isNaN(datetime)) {
+        timestamp = Date.parse(datetime);
+    }
+    if (isNaN(timestamp)){
+        return null;
+    }
+    let date = new Date(timestamp);
+    return date.getDate() + '.' + (date.getMonth()+1)+'.'+date.getFullYear();
+}
+
 export function formatDateTime(datetime){
     let timestamp = datetime;
     if(isNaN(datetime)) {
@@ -80,6 +92,7 @@ export function getJoinedEntities(parameters, index){
             delete joinedEntities[c];
         })
     }
+    console.log('joinedEntities', parameters, joinedEntities, index);
     return Object.keys(joinedEntities);
 }
 
@@ -424,13 +437,15 @@ const getPriorityPathBetween = (entities, start, end) => {
                 temp = {name: edge.name, parent: currentNode.name, distance: newDistance};
                 heaped[edge.name] = temp;
                 heap.add(temp);
+                //console.log("newdist", temp.distance, temp);
             } else if (temp.distance > newDistance) {
                 //in heap and distance is bigger so update
+                //console.log('updatedist', temp.distance , newDistance, temp);
                 //workaround to update distance and keep heap sorted
                 heap.heapify(heap.array.map(n => {
                         if (n.name === temp.name) {
                             n.distance = newDistance;
-                            n.parent = currentNode.parent;
+                            n.parent = currentNode.name;
                         }
                         return n;
                     })
@@ -443,6 +458,7 @@ const getPriorityPathBetween = (entities, start, end) => {
             return null;
         }
         currentNode = heap.poll();
+        //console.log('currentnode',currentNode);
         //found path
         if(currentNode.name === end){
             break;

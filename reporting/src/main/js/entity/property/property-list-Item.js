@@ -67,24 +67,35 @@ export default class PropertyListItem extends React.Component{
         this.hideStatsModal();
     }
     render() {
+        const property = this.props.property;
+        console.log('tttt', this.props);
         let stats = null;
         if(this.state.showStatsTooltip){
-            stats = <PropertyStatsTooltip property={this.props.property} />;
+            stats = <PropertyStatsTooltip property={property} getEntityRowCount={this.props.getEntityRowCount}/>;
         }
         if(this.state.showStatsModal){
             stats = <PropertyStatsModal
-                property={this.props.property}
+                property={property}
                 onClose={this.handleCloseModal}
                 getEntityPropertyStats={this.props.getEntityPropertyStats}
+                getEntityRowCount={this.props.getEntityRowCount}
+                entityName={this.props.entityName}
+                rowCount={this.props.rowCount}
                 loading={this.props.loading}/>;
         }
+        //console.log('sel ' , this.props.selected, property.name);
         return (
-            <li>
-                <span onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>{this.props.property.name}</span>
-                <span onClick={this.handleStats} > info</span>
-                <button onClick={this.handleAdd}>Add</button>
+            <div className="padded-list-item">
+                <label className="checkbox-inline">
+                    <input type="checkbox" checked={this.props.selected} onChange={this.props.onSelectChange.bind(this, property.name)} />
+                    <span onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>{property.name}</span>
+                </label>
+
+                <span onClick={this.handleStats} className="custom-item glyphicon glyphicon-info-sign cursor-pointer primary-color" style={{fontSize:"16px", verticalAlign:"text-bottom"}}></span>
+                <button onClick={this.handleAdd} className="custom-item btn btn-primary btn-add-xxs" style={{verticalAlign:"text-bottom"}}>
+                    <span className="glyphicon glyphicon-plus-sign cursor-pointer"></span></button>
                 {stats}
-            </li>
+            </div>
         );
     }
 }

@@ -28,8 +28,8 @@ export default class JoinParameters extends React.Component{
         }
         console.log('offset', this.props.offset);
         return (
-            <div style={{marginLeft: this.props.offset}}>
-                {start} -> {end} <button onClick={this.showEdit}>Edit</button>
+            <div style={{marginLeft: this.props.offset, padding: "2px"}}>
+                {start} => {end} <button onClick={this.showEdit} className="btn btn-primary btn-xs">Edit</button>
             </div>
         );
     }

@@ -19,13 +19,14 @@ export default class CustomLoader extends React.Component{
                 <div className="sk-circle11 sk-child"></div>
                 <div className="sk-circle12 sk-child"></div>
             </div>;
-        let hide =this.props.hideContentOnLoad;
+        let hide = this.props.hideContentOnLoad;
         //default hide is true
         if(hide === null ||  hide === 'undefined'){
             hide = true;
         }
         return (
-            <Loader show={this.props.show} hideContentOnLoad={hide} backgroundStyle={{backgroundColor: '#BFEFFF'}} message={spinner}>
+            <Loader show={this.props.show} hideContentOnLoad={hide}  backgroundStyle={{backgroundColor: '#e6f5ff'}} message={spinner}
+                    contentStyle={{minHeight:"60px", minWidth:"60px"}}>
                 {this.props.children}
             </Loader>
         );

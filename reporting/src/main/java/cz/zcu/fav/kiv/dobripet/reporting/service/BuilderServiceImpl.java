@@ -158,7 +158,7 @@ public class BuilderServiceImpl implements BuilderService {
         return sb.toString();
     }
 
-    public void updateEntityAliases(Map<String,String> entityAliases, String entityName){
+    private boolean createdEntityAlias(Map<String,String> entityAliases, String entityName){
         if(!entityAliases.containsKey(entityName)){
             int j = 1;
             int k = 0;
@@ -174,6 +174,13 @@ public class BuilderServiceImpl implements BuilderService {
                 }
             }
             entityAliases.put(entityName, entityAlias);
+            System.out.println("v pohode " + entityName);
+            return true;
+        }
+        else {
+
+            System.out.println("uz tam je pohode " + entityName);
+            return false;
         }
     }
 
@@ -198,13 +205,17 @@ public class BuilderServiceImpl implements BuilderService {
     }
 
 
-    public void addToJoin(JoinParameters parameters, Map<String, String> entityAliases, StringBuilder joins, boolean first){
+    private void addToJoin(JoinParameters parameters, Map<String, String> entityAliases, StringBuilder joins, boolean first){
        for(int i = 0; i <  parameters.getSelectedPath().size()-1; i++){
             String entityName = parameters.getSelectedPath().get(i);
             String targetEntityName = parameters.getSelectedPath().get(i+1);
             //create unique table aliases
-            updateEntityAliases(entityAliases, entityName);
-            updateEntityAliases(entityAliases, targetEntityName);
+            createdEntityAlias(entityAliases, entityName);
+            //TODO better join system
+            //table is already joined
+            if(!createdEntityAlias(entityAliases, targetEntityName)){
+                continue;
+            }
             //first entity is FROM
             if(first && i == 0){
                 joins.append("\nFROM "+schemaName+"."+entityName+" " + entityAliases.get(entityName));
@@ -219,7 +230,7 @@ public class BuilderServiceImpl implements BuilderService {
         StringBuilder sb = new StringBuilder();
         Map<String, String> entityAliases = new HashMap<>();
         Map<String, Integer> titles = new HashMap<>();
-        StringJoiner aliases = new StringJoiner(", ");
+        StringJoiner aliases = new StringJoiner(",\n");
         //prepare joins
         StringBuilder joins = new StringBuilder();
         //create tree from join parameters

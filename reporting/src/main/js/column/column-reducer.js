@@ -57,7 +57,7 @@ const handleAddPostResponse = (builder, joinParameters) =>{
 export default typeToReducer({
     [COLUMN_LIST_ADD]: (state, action) =>(
         updateObject(state, {
-            columns: [...state.columns, ...action.payload]
+            columns: [...state.columns, ...action.payload.columns]
         })
     ),
     [COLUMN_LIST_REMOVE]: (state, action) => (

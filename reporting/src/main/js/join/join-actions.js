@@ -90,6 +90,7 @@ export function selectJoinStart (joinStart) {
 
 export const JOIN_SPLIT_JOIN = 'JOIN_SPLIT_JOIN';
 export function splitJoin (parameterIndex, index) {
+    console.log('splitjoin');
     return (dispatch, getState) =>{
         dispatch({
             type: JOIN_SPLIT_JOIN,

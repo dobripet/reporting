@@ -56,10 +56,14 @@ export default class QuerySection extends React.Component{
                 </table>
         }*/
         console.log(query);
+        let text = 'None.';
+        if(query && query.length > 1){
+            text = query;
+        }
         return (
             <div className="query-section">
                 <Loader loaded={!loading}>
-                    {query}
+                    <div style={{whiteSpace: "pre-wrap"}}>{text}</div>
                 </Loader>
             </div>
 

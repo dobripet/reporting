@@ -169,11 +169,15 @@ public class StatisticsServiceImpl implements StatisticsService {
             //process histogram
             float nullCount = 0;
             for (HistogramQueryRow row : rows) {
+                String key;
                 //count null rows
                 if (row.getRangeHiKey() == null || row.getRangeHiKey().equalsIgnoreCase("null")) {
                     nullCount+=row.getEqRows();
                     System.out.println("je NULL " + row.getEqRows());
+                    key = "NULL";
                     //StatisticHeaderQueryRow header = statisticsDAO.getStatsHeader(entityName, statisticsName);
+                }else{
+                    key = row.getRangeHiKey();
                 }
                 //count true and false rows
                 if( row.getRangeHiKey()!= null) {
@@ -185,7 +189,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     }
                 }
                 //histogram record value is counted as rangeRows + eqRows
-                histogram.add(new HistogramRecord(row.getRangeHiKey(),row.getEqRows()+row.getRangeRows()));
+                histogram.add(new HistogramRecord(key,row.getEqRows()+row.getRangeRows()));
             }
             //percentage of null records
             if(header.getRows() != null) {
@@ -200,8 +204,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         log.warn("ROWS SAMPLED "+header.getRowsSampled() + " ROWS " +header.getRows());
         //resolve binaries  or strings
         if(property.getDataType().equals("binary") || property.getDataType().equals("string")){
-            //histogram only for constrained properties
-            if(property.getEnumConstraints() == null || property.getEnumConstraints().size() == 0){
+            //histogram only for constrained properties or less then 20 values
+            if((property.getEnumConstraints() == null || property.getEnumConstraints().size() == 0) && histogram.size() > 20) {
+                System.out.println("nuluju histogram " + histogram.size());
                 histogram = null;
             }
             return new PropertyStatistics(nullPercentage, header.getRowsSampled(), updated, histogram);

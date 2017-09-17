@@ -5,7 +5,7 @@ import {QUERY_UPDATE_SQL_AND_PREVIEW} from './query-actions'
 import { updateObject } from '../utils/utils'
 import typeToReducer from 'type-to-reducer'
 const initialState = {
-    query: "None",
+    query: '',
     loading: false,
     loaded: false,
     error: null,
@@ -38,11 +38,15 @@ export default typeToReducer({
     [MENU_CLEAR]: (state, action) => (
         updateObject(state, initialState)
     ),
-    [COLUMN_LIST_ADD]: (state, action) => (
-        updateObject(state, {
-            dirty: true
+    [COLUMN_LIST_ADD]: (state, action) => {
+        let dirty = true;
+        if (action.payload.join) {
+            dirty = false;
+        }
+        return updateObject(state, {
+            dirty: dirty
         })
-    ),
+    },
     [COLUMN_LIST_EDIT]: (state, action) => (
         updateObject(state, {
             dirty: true
@@ -50,7 +54,8 @@ export default typeToReducer({
     ),
     [COLUMN_LIST_REMOVE]: (state, action) => (
         updateObject(state, {
-            dirty: true
+            dirty: true,
+            query: ''
         })
     )
     ,[JOIN_EDIT_SAVE]: (state, action) => (

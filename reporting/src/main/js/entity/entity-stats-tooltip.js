@@ -9,7 +9,11 @@ export default class EntityStatsTooltip extends React.Component {
     componentDidMount() {
         //this.searchInput.focus();
         console.log("testing fetch");
-        this.props.getEntityRowCount(this.props.entity.name);
+        if(this.props.entity.rowCount == null){
+            //this.props.getEntityRowCount(this.props.entityName);
+            this.props.getEntityRowCount(this.props.entity.name);
+        }
+        //this.props.getEntityRowCount(this.props.entity.name);
     }
     render(){
         const {
@@ -44,6 +48,11 @@ export default class EntityStatsTooltip extends React.Component {
             }
             reference = <ul>{rows}</ul>;
         }
+        /*
+         <tr>
+         <td>Tags:</td>
+         <td>TODO</td>
+         </tr>*/
         console.log(this.props.entity);
         return (
             <div className="entity-tooltip-container">
@@ -54,10 +63,6 @@ export default class EntityStatsTooltip extends React.Component {
                         <tr>
                             <td>Count:</td>
                             <td>{this.props.entity.rowCount}</td>
-                        </tr>
-                        <tr>
-                            <td>Tags:</td>
-                            <td>TODO</td>
                         </tr>
                         </tbody>
                     </table>

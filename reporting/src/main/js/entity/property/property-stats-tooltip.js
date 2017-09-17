@@ -40,6 +40,10 @@ export default class PropertyStatsTooltip extends React.Component {
                 <td><ul>{values}</ul></td>
             </tr>
         }
+        /* <tr>
+         <td>Tags:</td>
+         <td>TODO</td>
+         </tr>*/
         return (
             <div className="entity-tooltip-container">
                 <div className="entity-tooltip">
@@ -52,10 +56,6 @@ export default class PropertyStatsTooltip extends React.Component {
                             <td>{property.dataType}</td>
                         </tr>
                         {enumConstraints}
-                        <tr>
-                            <td>Tags:</td>
-                            <td>TODO</td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>

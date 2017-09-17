@@ -21,7 +21,6 @@ export const COLUMN_LIST_ADD_POST= 'COLUMN_LIST_ADD_POST';
 //entity and array of properties
 export function addPropertiesToColumnList(entity, properties) {
     return (dispatch, getState) => {
-        //todo dispatch loading
         let state = getState();
         let params = state.join.parameters;
         let columns = state.column.columns;
@@ -49,7 +48,7 @@ export function addPropertiesToColumnList(entity, properties) {
         if(columns.length === 0 || (params.length === 0 && columns[0].entityName === entity.name)){
             dispatch({
                 type: COLUMN_LIST_ADD,
-                payload: columnsArray
+                payload: {columns: columnsArray, join: false}
             });
             return;
         }
@@ -63,7 +62,7 @@ export function addPropertiesToColumnList(entity, properties) {
                         if(i === 0 || i === params[j].selectedPath.length-1){
                             dispatch({
                                 type: COLUMN_LIST_ADD,
-                                payload: columnsArray
+                                payload: {columns: columnsArray, join: false}
                             });
                             return;
                         }else{
@@ -71,7 +70,7 @@ export function addPropertiesToColumnList(entity, properties) {
                             dispatch(splitJoin(j,i));
                             dispatch({
                                 type: COLUMN_LIST_ADD,
-                                payload: columnsArray
+                                payload: {columns: columnsArray, join: false}
                             });
                             return;
                         }
@@ -102,7 +101,7 @@ export function addPropertiesToColumnList(entity, properties) {
         }else {
             dispatch({
                 type: COLUMN_LIST_ADD,
-                payload: columnsArray
+                payload: {columns: columnsArray, join: true}
             });
         }
 
@@ -158,7 +157,7 @@ export function removeColumnFromColumnList(columnIndex){
         if(state.column.columns.filter(c => c.entityName === column.entityName).length <= 1 && state.join.parameters && state.join.parameters.length > 0){
             //TODO po novem navrhu rejoinu tohle nikdy nebude
             //check if it is middle entity
-            for(let parameter of state.join.parameters) {
+            /*for(let parameter of state.join.parameters) {
                 for (let i = 1; i < parameter.selectedPath.length - 1; i++) {
                     if (column.entityName === parameter.selectedPath[i]) {
                         //if yes just remove, no need to rebuild
@@ -169,7 +168,7 @@ export function removeColumnFromColumnList(columnIndex){
                         return;
                     }
                 }
-            }
+            }*/
             //else ask for remove in modal
             dispatch(openModal(dispatch => {
                     /*dispatch({

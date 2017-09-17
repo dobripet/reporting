@@ -7,7 +7,7 @@ const initialState = {
     loading: false,
     error: null,
     search: '',
-    statsLoading: false,
+    statsLoading: 0,
     statsError: false
 };
 
@@ -25,7 +25,11 @@ const addRowCount = (entities, payload) => {
     return entities;
 };*/
 const addPropertyStats = (entities, payload) => {
-    entities[payload.entityName].properties[payload.propertyName].statistic = payload;
+    //format null names
+    if(payload.statistic && payload.statistic.histogram){
+
+    }
+    entities[payload.entityName].properties[payload.propertyName].statistic = payload.statistic;
     return entities;
 };
 export default typeToReducer({
@@ -61,19 +65,19 @@ export default typeToReducer({
     [ ENTITY_STATS_ROW_COUNT_FETCH ]: {
         PENDING: (state) => (
             Object.assign({}, state, {
-                statsLoading: true,
+                statsLoading: state.statsLoading+1,
                 error: null
             })
         ),
         REJECTED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: false,
+                statsLoading: state.statsLoading-1,
                 error: action.payload.error
             })
         ),
         FULFILLED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: false,
+                statsLoading: state.statsLoading-1,
                 loaded: Date.now(),
                 entities: addRowCount(state.entities, action.payload)
             })
@@ -82,19 +86,19 @@ export default typeToReducer({
     [ ENTITY_PROPERTY_STATS_FETCH ]: {
         PENDING: (state) => (
             Object.assign({}, state, {
-                statsLoading: true,
+                statsLoading: state.statsLoading+1,
                 error: null
             })
         ),
         REJECTED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: false,
+                statsLoading: state.statsLoading-1,
                 error: action.payload.error
             })
         ),
         FULFILLED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: false,
+                statsLoading: state.statsLoading-1,
                 statsLoaded: Date.now(),
                 entities: addPropertyStats(state.entities, action.payload)
             })

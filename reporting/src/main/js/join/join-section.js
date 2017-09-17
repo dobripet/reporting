@@ -64,9 +64,9 @@ export default class JoinSection extends React.Component{
             editParameters
         } = this.props;
         console.log('join', parameters, editParameters, loading);
-        let params = null;
+        let params = "No joined entities.";
         //create tree from parameters
-        if(parameters) {
+        if(Array.isArray(parameters) && parameters.length > 0) {
             params = [];
             console.log('params', parameters);
             parameters.forEach((p,i) => {

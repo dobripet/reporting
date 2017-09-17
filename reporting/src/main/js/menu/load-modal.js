@@ -25,8 +25,8 @@ export default class LoadModal extends React.Component {
     render(){
         let queries = "No saved queries found.";
         if(this.props.queries.length > 0){
-            queries = this.props.queries.map((query) => <tr key={query.id} onClick={this.handleChoose.bind(this, query.id)}><td>{query.queryName}</td><td>{formatDateTime(query.updatedDate)}</td></tr>)
-            queries = <table>
+            queries = this.props.queries.map((query) => <tr key={query.id} onClick={this.handleChoose.bind(this, query.id)} className="cursor-pointer"><td>{query.queryName}</td><td>{formatDateTime(query.updatedDate)}</td></tr>)
+            queries = <table className="table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -42,7 +42,7 @@ export default class LoadModal extends React.Component {
                     <Loader show={false} >
                         <h3>Saved queries</h3>
                         {queries}
-                        <button onClick={this.handleClose}>Close</button>
+                        <button onClick={this.handleClose} className="brn btn-primary btn-sm" style={{display:"block"}}>Close</button>
                     </Loader>
                 </div>
             </div>

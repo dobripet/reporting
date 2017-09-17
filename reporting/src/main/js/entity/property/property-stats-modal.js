@@ -1,7 +1,7 @@
 import React from 'react'
-import Loader from 'react-loader'
+import Loader from '../../utils/custom-loader'
 import {BarChart, LineChart, XAxis, YAxis,CartesianGrid, Legend, Bar, Line, Tooltip } from 'recharts'
-import {formatDateTime} from '../../utils/utils';
+import {formatDateTime, roundDateTime} from '../../utils/utils';
 export default class PropertyStatsModal extends React.Component {
     constructor(props) {
         super(props);
@@ -12,8 +12,12 @@ export default class PropertyStatsModal extends React.Component {
 
     componentDidMount() {
         //this.searchInput.focus();
-        console.log("fetch dobrty");
+        console.log("fetch dobrty, ", this.props.rowCount, this.props.entityName);
         this.props.getEntityPropertyStats(this.props.property.name);
+        if(this.props.rowCount == null){
+            this.props.getEntityRowCount(this.props.entityName);
+        }
+        //this.props.getEntityRowCount(this.props.entity.name)
     }
     handleClose(){
         this.props.onClose();
@@ -105,24 +109,22 @@ export default class PropertyStatsModal extends React.Component {
             if (statistic.histogram) {
                 /*let values = statistic.histogram.map(record => <span
                     key={record.interval}> {record.interval} {record.value}</span>);*/
-                if(statistic.histogram.length < 20) {
+                if(statistic.histogram.length < 21) {
                     let width = statistic.histogram.length * 40 +100;
-                    histogram = <BarChart width={width} height={250} data={statistic.histogram}>
-                        <XAxis dataKey="name"/>
+                    histogram = <BarChart width={width} height={300} data={statistic.histogram}>
+                        <XAxis dataKey="name" tick={<CustomizedAxisTick dataType={dataType}/>} minTickGap={3} height={100} interval={0}/>
                         <YAxis />
                         <CartesianGrid strokeDasharray="3 3"/>
-                        /*<Tooltip />
-                         <Legend />*/
+                        <Tooltip />
                         <Bar dataKey="value" fill="#8884d8"/>
                     </BarChart>
                 } else{
                     let width = statistic.histogram.length * 5 +100;
                     histogram = <LineChart width={width} height={250} data={statistic.histogram}>
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="name" tick={<CustomizedAxisTick  dataType={dataType}/>} minTickGap={0} height={100} interval={5}/>
                         <YAxis />
                         <CartesianGrid strokeDasharray="3 3" />
-                       /* <Tooltip />
-                        <Legend />*/
+                        <Tooltip />
                         <Line type="monotone" dataKey="value" stroke="#8884d8" />
                     </LineChart>
                 }
@@ -186,17 +188,26 @@ export default class PropertyStatsModal extends React.Component {
                 }
             }
         }
+        /*<tr>
+         <td>Tags:</td>
+         </tr>*/
+        console.log('loadingmodal', this.props.loading);
         return (
             <div className="custom-modal-container">
                 <div className="custom-modal">
 
                     <h3>{this.props.property.name}</h3>
                     {notNullSpan}
+                    <Loader show={this.props.loading > 0} hideContentOnLoad={false}>
                     <table>
                         <tbody>
                         <tr>
                             <td>Type:</td>
                             <td>{dataType}</td>
+                        </tr>
+                        <tr>
+                            <td>Count:</td>
+                            <td>{this.props.rowCount}</td>
                         </tr>
                         {updated}
                         {rowsSampledRow}
@@ -206,14 +217,12 @@ export default class PropertyStatsModal extends React.Component {
                         {maxRow}
                         {avgRow}
                         {trueFalseRow}
-                        <tr>
-                            <td>Tags:</td>
-                            <td>TODO</td>
-                        </tr>
+
                         </tbody>
                     </table>
                     {histogram}
-                    <button onClick={this.handleClose}>Close</button>
+                    </Loader>
+                    <button onClick={this.handleClose} className="brn btn-primary btn-sm" style={{display:"block"}}>Close</button>
                 </div>
             </div>
         )
@@ -231,3 +240,21 @@ PropertyStatsModal.propTypes = {
     getEntityPropertyStats: React.PropTypes.func.isRequired,
     onClose: React.PropTypes.func.isRequired
 };
+
+class CustomizedAxisTick extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render () {
+        const {x, y, stroke, payload, dataType} = this.props;
+        //format datetime
+        if(dataType === 'datetime'){
+            payload.value = roundDateTime(payload.value);
+        }
+        return (
+            <g transform={`translate(${x},${y})`}>
+                <text x={0} y={-5} dy={16} textAnchor="end" fill="#666" transform="rotate(-80)">{payload.value}</text>
+            </g>
+        );
+    }
+}

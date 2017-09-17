@@ -7,7 +7,8 @@ const mapStateToProps = (state) =>{
        // error:  state.menu.error
         queries: state.menu.queries,
         name: state.menu.name,
-        id: state.menu.id
+        id: state.menu.id,
+        showSavedOK: state.menu.showSavedOK
     }
 };
 const mapDispatchToProps = (dispatch) =>{

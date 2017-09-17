@@ -1,6 +1,7 @@
 import React from 'react'
 import Loader from '../utils/custom-loader'
 import {FormControl} from 'react-bootstrap'
+
 export default class SaveModal extends React.Component {
     constructor(props) {
         super(props);
@@ -52,8 +53,8 @@ export default class SaveModal extends React.Component {
                             inputRef={input => { this.searchInput = input }}
                             onChange={this.handleChange}
                         />
-                        <button onClick={this.handleClose}>Close</button>
-                        <button onClick={this.handleSave}>Save</button>
+                        <button onClick={this.handleSave} className="btn btn-success" style={{margin:"10px 10px 0px 0px"}}>Save</button>
+                        <button onClick={this.handleClose} className="btn btn-info" style={{marginTop:"10px"}}>Close</button>
                     </Loader>
                 </div>
             </div>

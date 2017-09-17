@@ -53,6 +53,7 @@ export default class ColumnListItem extends React.Component{
                 onChange={this.handleSearch}
                 onBlur={this.handleBlur}
                 defaultValue={this.props.column.title}
+                autoFocus={true}
             />
         }
         let menu = null;
@@ -87,9 +88,8 @@ export default class ColumnListItem extends React.Component{
                     {title}
                 </td>
                 <td>
-                    {menu}
-                    <button onClick={this.handleOpenAggregateMenu}>Add function</button>
-                    <button onClick={this.handleRemove}>Remove</button>
+                    {menu}<button onClick={this.handleRemove} className="custom-item btn btn-primary btn-add-xxs" style={{verticalAlign:"text-bottom"}}>
+                    <span className="glyphicon glyphicon-minus-sign cursor-pointer"></span></button>
                 </td>
             </tr>
         );

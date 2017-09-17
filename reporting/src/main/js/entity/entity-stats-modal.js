@@ -29,8 +29,8 @@ export default class EntityStatsModal extends React.Component {
         if(referredByMap && Object.keys(referredByMap).length > 0 ){
             //map all referredBy tables
             console.log("jsem tu");
-            let rows = Object.keys(referredByMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referredByMap[tableName]} name={tableName}/>);
-            referred = <ul>{rows}</ul>;
+            referred = Object.keys(referredByMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referredByMap[tableName]} name={tableName}/>);
+            //referred = rows;
         }
 
         // do reference list with columns
@@ -38,8 +38,8 @@ export default class EntityStatsModal extends React.Component {
         if(referenceMap && Object.keys(referenceMap).length > 0 ){
             //map all referredBy tables
             //console.log("jsem tu");
-            let rows = Object.keys(referenceMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referenceMap[tableName]} name={tableName}/>);
-            reference = <ul>{rows}</ul>;
+            reference = Object.keys(referenceMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referenceMap[tableName]} name={tableName}/>);
+            //reference = <ul>{rows}</ul>;
         }
         //documentation links
         let schemaUrl = null;
@@ -50,6 +50,10 @@ export default class EntityStatsModal extends React.Component {
         if(this.props.entity.tableUrl) {
             tableUrl = <tr><td>Table: </td><td><a href={this.props.entity.tableUrl}>{this.props.entity.tableUrl}</a></td></tr>
         }
+        /* <tr>
+         <td>Tags:</td>
+         <td>TODO</td>
+         </tr>*/
         return (
             <div className="custom-modal-container">
                 <div className="custom-modal">
@@ -62,17 +66,15 @@ export default class EntityStatsModal extends React.Component {
                             <td>Count:</td>
                             <td>{this.props.entity.rowCount}</td>
                         </tr>
-                        <tr>
-                            <td>Tags:</td>
-                            <td>TODO</td>
-                        </tr>
+
                         </tbody>
                     </table>
                     <h4>Referred by:</h4>
                     {referred}
                     <h4>Reference:</h4>
                     {reference}
-                    <button onClick={this.handleClose}>Close</button>
+                    <br/>
+                    <button onClick={this.handleClose} className="brn btn-primary btn-sm" style={{display:"block"}}>Close</button>
                 </div>
             </div>
         )

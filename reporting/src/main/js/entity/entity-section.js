@@ -70,7 +70,6 @@ export default class EntitySection extends React.Component{
                     getEntityRowCount={this.props.getEntityRowCount}
                     getEntityPropertyStats={this.getEntityPropertyStats}
                     loading={statsLoading}
-
                 />);
         }
         console.log(this.getEntityRowCount);
