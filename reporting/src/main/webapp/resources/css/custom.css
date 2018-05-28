@@ -35,7 +35,6 @@
     min-height: 0px;
 }
 .vertical-app-container {
-    /*flex: 1 auto;*/
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -62,15 +61,11 @@
     border-radius: 10px;
 }
 .entity-section {
-    /*
-    height: 800px;
-    max-height: 90vh;*/
     margin: 5px;
-    /*padding: 5px;*/
-    min-width: 450px;
+    min-width: 480px;
     border: 2px solid var(--main-border-color);
     border-radius: 10px;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
 }
@@ -85,10 +80,7 @@
 .column-section {
 
     display: flex;
-    flex: 4;/*
-    height: 450px;
-    max-height: 50vh;
-    width: 600px;*/
+    flex: 4;
     padding: 5px;
     margin: 5px;
     border: 2px solid var(--main-border-color);
@@ -100,18 +92,13 @@
     flex: 1;
     border: 2px solid var(--main-border-color);
     border-radius: 10px;
-    /*height: 200px;
-    max-height: 20vh;
-    max-width: 75vw;*/
     padding: 5px;
     margin: 5px;
     overflow: auto;
 }
 .query-section {
     display: flex;
-    flex: 1;/*
-    height: 600px;
-    max-height: 70vh;*/
+    flex: 1;
     padding: 5px;
     margin: 5px;
     border: 2px solid var(--main-border-color);
@@ -119,11 +106,7 @@
     overflow: auto;
 }
 .join-section {
-    display: flex;
-    flex: 1;/*
-    height: 150px;
-    max-height: 20vh;
-    width: 600px;*/
+    flex: 1;
     padding: 5px;
     margin: 5px;
     border: 2px solid var(--main-border-color);

@@ -1,12 +1,17 @@
+/**
+ * Modal window actions
+ *
+ * Created by Petr on 3/8/2017.
+ */
 export const MODAL_OPEN = 'MODAL_OPEN';
-export function openModal (confirm, message, type, decline) {
+export function openModal(confirm, message, type, decline) {
     return {
         type: MODAL_OPEN,
         payload: {confirm, decline, message, type}
     }
 }
 export const MODAL_CLOSE = 'MODAL_CLOSE';
-export function closeModal () {
+export function closeModal() {
     return {
         type: MODAL_CLOSE,
         payload: {}

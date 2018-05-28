@@ -7,7 +7,7 @@ const path = require('path');
 module.exports = function(){
     const isProd = process.env.NODE_ENV === 'prod';
     //Create vendor bundle
-    console.log('test enviromentu ', process.env.NODE_ENV);
+    console.log('Build for enviroment: ', process.env.NODE_ENV);
     plugins = [
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
@@ -28,7 +28,7 @@ module.exports = function(){
                 }
             }),
             new webpack.DefinePlugin({
-                BASE_URL: JSON.stringify('')
+                BASE_URL: JSON.stringify('/reporting')
             })
         )
     }else {

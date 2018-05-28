@@ -38,24 +38,10 @@
 
     <dependencies>
         <!-- Model -->
-
         <dependency>
             <groupId>cz.zcu.fav.kiv.dobripet.reporting</groupId>
             <artifactId>reporting-model</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Pentaho -->
-        <dependency>
-            <groupId>pentaho-reporting-engine</groupId>
-            <artifactId>pentaho-reporting-engine-classic-core</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-reporting-engine</groupId>
-            <artifactId>pentaho-reporting-engine-classic-extensions</artifactId>
-            <version>${pentaho.version}</version>
         </dependency>
 
         <!-- Hibernate -->
@@ -71,14 +57,20 @@
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>6.1.0.jre8</version>
+        </dependency>
+        <!-- <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.1.1</version>
         </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -117,60 +109,6 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.8.7</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-firefox-driver</artifactId>
-            <version>${selenium.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-            <version>${selenium.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-ie-driver</artifactId>
-            <version>${selenium.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>1.6.1</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- fix for webdrivermanager -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.12</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- temporary fix until webdriver manager is updated -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>21.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.11</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Logging -->
@@ -257,46 +195,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>com.github.webdriverextensions</groupId>
-                <artifactId>webdriverextensions-maven-plugin</artifactId>
-                <version>3.1.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install-drivers</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <drivers>
-                        <driver>
-                            <name>chromedriver</name>
-                            <platform>windows</platform>
-                            <bit>32</bit>
-                            <version>2.27</version>
-                        </driver>
-                        <driver>
-                            <name>internetexplorerdriver</name>
-                            <platform>windows</platform>
-                            <bit>64</bit>
-                            <version>3.2.0</version>
-                        </driver>
-                    </drivers>
-                </configuration>
-            </plugin>-->
-            <!--
-                -->
-              <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
-                    <configuration>
-                        <suiteXmlFiles>
-                            <suiteXmlFile>src/test/resources/CrossBrowserTestSuite.xml</suiteXmlFile>
-                        </suiteXmlFiles>
-                    </configuration>
-                </plugin>
         </plugins>
         <resources>
             <resource>
@@ -305,10 +203,4 @@
             </resource>
         </resources>
     </build>
-    <repositories>
-        <repository>
-            <id>pentaho-releases</id>
-            <url>http://repository.pentaho.org/artifactory/repo/</url>
-        </repository>
-    </repositories>
 </project>

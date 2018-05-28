@@ -1,6 +1,11 @@
-import { MODAL_OPEN, MODAL_CLOSE } from './modal-actions'
-import { updateObject } from '../utils/utils'
+import {MODAL_OPEN, MODAL_CLOSE} from './modal-actions'
+import {updateObject} from '../utils/utils'
 import typeToReducer from 'type-to-reducer'
+/**
+ * Modal window reducer
+ *
+ * Created by Petr on 3/8/2017.
+ */
 const initialState = {
     opened: false,
     confirm: null,
@@ -9,7 +14,7 @@ const initialState = {
     type: null
 };
 export default typeToReducer({
-    [MODAL_OPEN]:(state, action) => (
+    [MODAL_OPEN]: (state, action) => (
         updateObject(state, {
             opened: true,
             confirm: action.payload.confirm,
@@ -18,7 +23,7 @@ export default typeToReducer({
             type: action.payload.type
         })
     ),
-    [MODAL_CLOSE]:(state, action) => (
+    [MODAL_CLOSE]: (state, action) => (
         updateObject(state, {
             opened: false,
             confirm: null,

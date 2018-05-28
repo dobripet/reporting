@@ -3,14 +3,18 @@ package cz.zcu.fav.kiv.dobripet.reporting.model;
 import java.util.*;
 
 /**
- * Created by Petr on 3/15/2017.
+ * Entity metadata, can be database table or view
+ *
+ * Created by Petr on 3/24/2017.
  */
 public class Entity {
     private String name = "";
     private String schemaUrl = "";
     private String tableUrl = "";
     private Map<String, Property> properties = new HashMap<String, Property>();
+    //map of foreign keys that point to other entities
     private Map<String, List<ForeignKey>> referenceMap = new HashMap<String, List<ForeignKey>>();
+    //map of foreign keys that point to this entities
     private Map<String, List<ForeignKey>> referredByMap = new HashMap<String, List<ForeignKey>>();
 
     public String getName() {

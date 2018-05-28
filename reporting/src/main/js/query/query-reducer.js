@@ -1,9 +1,16 @@
-import { COLUMN_LIST_ADD, COLUMN_LIST_EDIT, COLUMN_LIST_REMOVE } from '../column/column-actions'
+import {COLUMN_LIST_ADD, COLUMN_LIST_EDIT, COLUMN_LIST_REMOVE} from '../column/column-actions'
 import {JOIN_EDIT_SAVE} from '../join/join-actions'
-import { MENU_CLEAR, MENU_LOAD_QUERY } from '../menu/menu-actions'
+import {MENU_CLEAR, MENU_LOAD_QUERY} from '../menu/menu-actions'
 import {QUERY_UPDATE_SQL_AND_PREVIEW} from './query-actions'
-import { updateObject } from '../utils/utils'
+import {updateObject} from '../utils/utils'
 import typeToReducer from 'type-to-reducer'
+
+/**
+ * SQL Query reducer
+ *
+ * Created by Petr on 3/4/2017.
+ */
+
 const initialState = {
     query: '',
     loading: false,
@@ -58,11 +65,11 @@ export default typeToReducer({
             query: ''
         })
     )
-    ,[JOIN_EDIT_SAVE]: (state, action) => (
+    , [JOIN_EDIT_SAVE]: (state, action) => (
         updateObject(state, {
             dirty: true
         })
-    ),[MENU_LOAD_QUERY]: (state, action) => (
+    ), [MENU_LOAD_QUERY]: (state, action) => (
         updateObject(state, {
             dirty: true
         })

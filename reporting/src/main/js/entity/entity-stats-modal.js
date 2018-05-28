@@ -1,5 +1,11 @@
 import React from 'react'
 import EntityStatsModalKey from './entity-stats-modal-key'
+
+/**
+ * Statistics and information modal window component for entity
+ *
+ * Created by Petr on 3/19/2017.
+ */
 export default class EntityStatsModal extends React.Component {
     constructor(props) {
         super(props);
@@ -9,51 +15,50 @@ export default class EntityStatsModal extends React.Component {
     }
 
     componentDidMount() {
-        //this.searchInput.focus();
-        console.log("testing fetch");
         this.props.getEntityRowCount(this.props.entity.name);
     }
-    handleClose(){
+
+    handleClose() {
         this.props.onClose();
     }
-    render(){
+
+    render() {
         const {
             referredByMap,
             referenceMap,
         } = this.props.entity;
-        console.log(this.props.entity.schemaUrl);
-        console.log(this.props.entity.tableUrl);
-        console.log(this.props.entity);
         // do referred by list with columns
         let referred = "No tables found.";
-        if(referredByMap && Object.keys(referredByMap).length > 0 ){
+        if (referredByMap && Object.keys(referredByMap).length > 0) {
             //map all referredBy tables
-            console.log("jsem tu");
-            referred = Object.keys(referredByMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referredByMap[tableName]} name={tableName}/>);
-            //referred = rows;
+            referred = Object.keys(referredByMap).map(tableName => <EntityStatsModalKey key={tableName}
+                                                                                        keys={referredByMap[tableName]}
+                                                                                        name={tableName}/>);
         }
 
         // do reference list with columns
         let reference = "No tables found.";
-        if(referenceMap && Object.keys(referenceMap).length > 0 ){
+        if (referenceMap && Object.keys(referenceMap).length > 0) {
             //map all referredBy tables
-            //console.log("jsem tu");
-            reference = Object.keys(referenceMap).map(tableName => <EntityStatsModalKey key={tableName} keys={referenceMap[tableName]} name={tableName}/>);
-            //reference = <ul>{rows}</ul>;
+            reference = Object.keys(referenceMap).map(tableName => <EntityStatsModalKey key={tableName}
+                                                                                        keys={referenceMap[tableName]}
+                                                                                        name={tableName}/>);
         }
         //documentation links
         let schemaUrl = null;
-        if(this.props.entity.schemaUrl) {
-            schemaUrl = <tr><td>Schema: </td><td><a href={this.props.entity.schemaUrl}>{this.props.entity.schemaUrl}</a></td></tr>
+        if (this.props.entity.schemaUrl) {
+            schemaUrl = <tr>
+                <td>Schema:</td>
+                <td><a href={this.props.entity.schemaUrl}>{this.props.entity.schemaUrl}</a></td>
+            </tr>
         }
         let tableUrl = null;
-        if(this.props.entity.tableUrl) {
-            tableUrl = <tr><td>Table: </td><td><a href={this.props.entity.tableUrl}>{this.props.entity.tableUrl}</a></td></tr>
+        if (this.props.entity.tableUrl) {
+            tableUrl = <tr>
+                <td>Table:</td>
+                <td><a href={this.props.entity.tableUrl}>{this.props.entity.tableUrl}</a></td>
+            </tr>
         }
-        /* <tr>
-         <td>Tags:</td>
-         <td>TODO</td>
-         </tr>*/
         return (
             <div className="custom-modal-container">
                 <div className="custom-modal">
@@ -74,7 +79,9 @@ export default class EntityStatsModal extends React.Component {
                     <h4>Reference:</h4>
                     {reference}
                     <br/>
-                    <button onClick={this.handleClose} className="brn btn-primary btn-sm" style={{display:"block"}}>Close</button>
+                    <button onClick={this.handleClose} className="brn btn-primary btn-sm" style={{display: "block"}}>
+                        Close
+                    </button>
                 </div>
             </div>
         )

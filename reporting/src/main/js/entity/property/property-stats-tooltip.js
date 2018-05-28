@@ -1,4 +1,9 @@
 import React from 'react'
+/**
+ * Tooltip component to show property statistics and information
+ *
+ * Created by Petr on 3/19/2017.
+ */
 export default class PropertyStatsTooltip extends React.Component {
     constructor(props) {
         super(props);
@@ -6,44 +11,25 @@ export default class PropertyStatsTooltip extends React.Component {
         // bindings
     }
 
-    componentDidMount() {
-        //this.searchInput.focus();
-        console.log("testing fetch");
-        //this.props.getEntityRowCount(this.props.entityName);
-    }
-    render(){
-        // od referred by list
-        /*let referred = "No tables found.";
-        if(this.props.entity.referredByMap && Object.keys(this.props.entity.referredByMap).length > 0 ){
-            let rows = Object.keys(this.props.entity.referredByMap).map(tableName => <li key={tableName} >{tableName}</li> );
-            referred = <ul>{rows}</ul>;
-        }
-        // do reference list
-        let reference = "No tables found.";
-        if(this.props.entity.referenceMap && Object.keys(this.props.entity.referenceMap).length > 0 ){
-            let rows = Object.keys(this.props.entity.referenceMap).map(tableName => <li key={tableName} >{tableName}</li> );
-            reference = <ul>{rows}</ul>;
-        }*/
+    render() {
+
         const {
             property
         } = this.props;
-        console.log(this.props.entity);
         let notNull = null;
-        if(property.notNull){
+        if (property.notNull) {
             notNull = "Not Null";
         }
         let enumConstraints = null;
-        if(property.enumConstraints){
+        if (property.enumConstraints) {
             let values = property.enumConstraints.map((value, i) => <li key={i}>{value}</li>);
             enumConstraints = <tr>
-                <td>Allowed values: </td>
-                <td><ul>{values}</ul></td>
+                <td>Allowed values:</td>
+                <td>
+                    <ul>{values}</ul>
+                </td>
             </tr>
         }
-        /* <tr>
-         <td>Tags:</td>
-         <td>TODO</td>
-         </tr>*/
         return (
             <div className="entity-tooltip-container">
                 <div className="entity-tooltip">

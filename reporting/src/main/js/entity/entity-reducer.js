@@ -1,7 +1,18 @@
 import typeToReducer from 'type-to-reducer'
-import { ENTITY_LIST_FETCH, ENTITY_LIST_SEARCH, ENTITY_STATS_ROW_COUNT_FETCH, ENTITY_PROPERTY_STATS_FETCH } from './entity-actions'
-import { MENU_CLEAR } from '../menu/menu-actions'
-import { deleteItemFromArray, updateItemInArray, updateObject } from '../utils/utils'
+import {
+    ENTITY_LIST_FETCH,
+    ENTITY_LIST_SEARCH,
+    ENTITY_STATS_ROW_COUNT_FETCH,
+    ENTITY_PROPERTY_STATS_FETCH
+} from './entity-actions'
+import {MENU_CLEAR} from '../menu/menu-actions'
+import {updateObject} from '../utils/utils'
+
+/**
+ * Entity reducer
+ *
+ * Created by Petr on 3/19/2017.
+ */
 const initialState = {
     entities: {},
     loading: false,
@@ -15,18 +26,9 @@ const addRowCount = (entities, payload) => {
     entities[payload.entityName].rowCount = payload.rowCount;
     return entities;
 };
-    /*for(let entity in entities){
-        if(entities[entity].name === payload.name){
-            console.log("row count ", payload);
-            entities[entity].rowCount = payload.rowCount;
-            return entities;
-        }
-    }
-    return entities;
-};*/
 const addPropertyStats = (entities, payload) => {
     //format null names
-    if(payload.statistic && payload.statistic.histogram){
+    if (payload.statistic && payload.statistic.histogram) {
 
     }
     entities[payload.entityName].properties[payload.propertyName].statistic = payload.statistic;
@@ -35,19 +37,19 @@ const addPropertyStats = (entities, payload) => {
 export default typeToReducer({
     [ ENTITY_LIST_FETCH ]: {
         PENDING: (state) => (
-            Object.assign( {}, state, {
+            Object.assign({}, state, {
                 loading: true,
                 error: null
             })
         ),
         REJECTED: (state, action) => (
-            Object.assign( {}, state, {
+            Object.assign({}, state, {
                 loading: false,
                 error: action.payload.error
             })
         ),
         FULFILLED: (state, action) => (
-            Object.assign( {}, state, {
+            Object.assign({}, state, {
                 loading: false,
                 loaded: Date.now(),
                 entities: action.payload.reduce((entities, entity) => {
@@ -58,26 +60,26 @@ export default typeToReducer({
         ),
     },
     [ENTITY_LIST_SEARCH]: (state, action) => (
-        Object.assign( {}, state, {
+        Object.assign({}, state, {
             search: action.payload
         })
     ),
     [ ENTITY_STATS_ROW_COUNT_FETCH ]: {
         PENDING: (state) => (
             Object.assign({}, state, {
-                statsLoading: state.statsLoading+1,
+                statsLoading: state.statsLoading + 1,
                 error: null
             })
         ),
         REJECTED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: state.statsLoading-1,
+                statsLoading: state.statsLoading - 1,
                 error: action.payload.error
             })
         ),
         FULFILLED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: state.statsLoading-1,
+                statsLoading: state.statsLoading - 1,
                 loaded: Date.now(),
                 entities: addRowCount(state.entities, action.payload)
             })
@@ -86,29 +88,29 @@ export default typeToReducer({
     [ ENTITY_PROPERTY_STATS_FETCH ]: {
         PENDING: (state) => (
             Object.assign({}, state, {
-                statsLoading: state.statsLoading+1,
+                statsLoading: state.statsLoading + 1,
                 error: null
             })
         ),
         REJECTED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: state.statsLoading-1,
+                statsLoading: state.statsLoading - 1,
                 error: action.payload.error
             })
         ),
         FULFILLED: (state, action) => (
             Object.assign({}, state, {
-                statsLoading: state.statsLoading-1,
+                statsLoading: state.statsLoading - 1,
                 statsLoaded: Date.now(),
                 entities: addPropertyStats(state.entities, action.payload)
             })
         )
     },
-    [MENU_CLEAR]:(state, action) => (
+    [MENU_CLEAR]: (state, action) => (
         updateObject(state, {
             search: '',
             statsError: false,
             error: null,
         })
     )
-    }, initialState);
+}, initialState);

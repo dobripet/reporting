@@ -4,6 +4,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Property metadata
+ *
  * Created by Petr on 3/15/2017.
  */
 public class Property {

@@ -1,10 +1,15 @@
-import { MENU_SAVE, MENU_LOAD_ALL_QUERIES, MENU_LOAD_QUERY, MENU_NEW_QUERY, SHOW_SAVED_OK} from './menu-actions'
-import { updateObject, formatDateTime } from '../utils/utils'
+import {MENU_SAVE, MENU_LOAD_ALL_QUERIES, MENU_LOAD_QUERY, MENU_NEW_QUERY, SHOW_SAVED_OK} from './menu-actions'
+import {updateObject} from '../utils/utils'
 import typeToReducer from 'type-to-reducer'
+/**
+ * Menu reducer
+ *
+ * Created by Petr on 4/5/2017.
+ */
 const initialState = {
     error: null,
     id: null,
-    queries : [],
+    queries: [],
     name: '',
     loading: false,
     showSavedOK: false
@@ -57,32 +62,23 @@ export default typeToReducer({
             })
         ),
     },
-    [MENU_LOAD_QUERY]:(state, action) => (
+    [MENU_LOAD_QUERY]: (state, action) => (
         updateObject(state, {
             name: action.payload.queryName,
             id: action.payload.id,
             showSavedOK: false
         })
     ),
-    [MENU_NEW_QUERY]:(state, action) => (
+    [MENU_NEW_QUERY]: (state, action) => (
         updateObject(state, {
             name: '',
             id: null,
             showSavedOK: false
         })
     ),
-    [SHOW_SAVED_OK]:(state, action) => (
+    [SHOW_SAVED_OK]: (state, action) => (
         updateObject(state, {
             showSavedOK: true
         })
     )
 }, initialState);
-/*[MENU_CLEAR]:(state, action) => (
- updateObject(state, {
- opened: true,
- confirm: action.payload.confirm,
- decline: action.payload.decline,
- message: action.payload.message,
- type: action.payload.type
- })
- ),*/

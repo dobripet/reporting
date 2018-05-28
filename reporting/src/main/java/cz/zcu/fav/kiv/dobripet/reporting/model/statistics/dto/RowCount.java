@@ -1,4 +1,4 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.statistics;
+package cz.zcu.fav.kiv.dobripet.reporting.model.statistics.dto;
 
 /**
  * Created by Petr on 7/19/2017.

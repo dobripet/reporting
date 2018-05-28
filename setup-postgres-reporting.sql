@@ -17,3 +17,4 @@ CREATE USER reporting WITH PASSWORD 'reporting';
 GRANT USAGE ON SCHEMA reporting TO reporting;
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA reporting TO reporting;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA reporting TO reporting;
+

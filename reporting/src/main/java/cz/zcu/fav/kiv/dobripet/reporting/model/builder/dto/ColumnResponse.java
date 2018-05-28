@@ -1,6 +1,4 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers;
-
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.JoinParameters;
+package cz.zcu.fav.kiv.dobripet.reporting.model.builder.dto;
 
 import java.util.List;
 

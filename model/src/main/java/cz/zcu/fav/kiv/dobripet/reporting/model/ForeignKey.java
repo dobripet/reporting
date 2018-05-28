@@ -2,6 +2,11 @@ package cz.zcu.fav.kiv.dobripet.reporting.model;
 
 import java.util.Objects;
 
+/**
+ * Foreign key metadata
+ *
+ * Created by Petr on 3/24/2017.
+ */
 public class ForeignKey {
     private String localColumnName;
     private String foreignColumnName;

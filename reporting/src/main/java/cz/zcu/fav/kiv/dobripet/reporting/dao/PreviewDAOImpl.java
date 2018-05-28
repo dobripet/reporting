@@ -4,17 +4,17 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
+ * DAO that handles previews from dci database
+ *
  * Created by Petr on 6/8/2017.
  */
-
 @Repository
-public class PreviewDAOImpl  implements PreviewDAO {
+public class PreviewDAOImpl implements PreviewDAO {
     Logger log = LoggerFactory.getLogger(PreviewDAOImpl.class);
 
     private SessionFactory sessionFactory;
@@ -24,14 +24,14 @@ public class PreviewDAOImpl  implements PreviewDAO {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Get preview data from given query
+     * @param query valid SQL query
+     * @return top 25 results
+     */
     @Override
-    public List getPreviewForStringQuery(String query) {/*
-        StringBuilder limited = new StringBuilder(query);
-        int select = limited.indexOf("SELECT ");
-        if(select > -1){
-            limited.insert(select+7, "TOP 25 ");
-        }
-        System.out.println("test limited " + limited.toString());*/
+    public List getPreviewForStringQuery(String query) {
+        log.debug("Query: " + query);
         return sessionFactory.getCurrentSession().createNativeQuery(query).setMaxResults(25).getResultList();
     }
 }

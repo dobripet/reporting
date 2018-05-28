@@ -8,6 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
+ * Development profile configuration
+ *
  * Created by Petr on 6/16/2017.
  */
 @Configuration
@@ -15,13 +17,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class DevConfiguration {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        System.out.println("TOHLE JE DEV");
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                    .allowedOrigins("http://localhost:8080")
-                    .allowedMethods("GET", "POST", "PUT");
+                        .allowedOrigins("http://localhost:8080")
+                        .allowedMethods("GET", "POST", "PUT");
             }
         };
     }

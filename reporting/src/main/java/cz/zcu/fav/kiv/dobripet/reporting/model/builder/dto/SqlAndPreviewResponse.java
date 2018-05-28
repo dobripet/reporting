@@ -1,4 +1,4 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers;
+package cz.zcu.fav.kiv.dobripet.reporting.model.builder.dto;
 
 import java.util.List;
 

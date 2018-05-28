@@ -1,7 +1,12 @@
 import React from 'react'
 import JoinModalKeys from './join-modal-keys'
-import { getSelectedPathIndex } from '../utils/utils'
 import {allTypes} from './join-types'
+import {getSelectedPathIndex} from '../utils/join-utils'
+/**
+ * Join modal component for create or edit join parameters
+ *
+ * Created by Petr on 4/5/2017.
+ */
 export default class JoinModal extends React.Component {
     constructor(props) {
         super(props);
@@ -17,10 +22,9 @@ export default class JoinModal extends React.Component {
         this.handleKeysChange = this.handleKeysChange.bind(this);
         this.handlePathChange = this.handlePathChange.bind(this);
         this.handleJoinStartChange = this.handleJoinStartChange.bind(this);
-        //this.handleJoinTypeChange = this.handleJoinTypeChange.bind(this);
     }
-    componentWillReceiveProps(nextProps){
-        console.log("modal next props", nextProps);
+
+    componentWillReceiveProps(nextProps) {
         this.setState({
             joinParameters: nextProps.joinParameters,
             selectedIndex: getSelectedPathIndex(nextProps.joinParameters.paths, nextProps.joinParameters.selectedPath),
@@ -28,17 +32,14 @@ export default class JoinModal extends React.Component {
         })
     }
 
-    componentDidMount() {
-        //this.searchInput.focus();
-        console.log("fetch dobrty");
-        //this.props.getEntityPropertyStats(this.props.property.name);
-    }
-    handleClose(){
+    handleClose() {
         this.props.onClose();
     }
-    handleSave(){
+
+    handleSave() {
         this.props.onSave(this.props.index, this.state.joinParameters);
     }
+
     handleKeysChange(index, keys) {
         let joinParameters = this.state.joinParameters;
         joinParameters.joinKeys[index] = keys;
@@ -47,27 +48,23 @@ export default class JoinModal extends React.Component {
 
     handlePathChange(event) {
         let index = event.target.value;
-        if(index === this.state.selectedIndex){
-            console.log('mrdak krtak');
+        if (index === this.state.selectedIndex) {
             return;
         }
-        console.log('select', index);/*
-        let params = this.state.joinParameters;
-        params.selectedPath = this.state.joinParameters.paths[index];
-        this.setState({joinParameters: params, selectedIndex: index});*/
         this.props.onSelectPath(this.props.joinParameters.paths[index]);
     }
+
     handleJoinTypeChange(index, event) {
-        console.log('edit type', index, event.target.value);
         let joinParameters = this.state.joinParameters;
         joinParameters.joinTypes[index] = event.target.value;
         this.setState(joinParameters);
     }
-    handleJoinStartChange(event){
-        console.log('select entity', event.target.value);
+
+    handleJoinStartChange(event) {
         this.props.onSelectJoinStart(event.target.value);
     }
-    render(){
+
+    render() {
         const {
             selectedPath,
             paths,
@@ -75,47 +72,45 @@ export default class JoinModal extends React.Component {
             joinTypes,
             joinedEntities
         } = this.state.joinParameters;
-        console.log("show join ", this.props.joinParameters);
-        let start= null;
-        let end = null;
         let keys = [];
         let path = null;
-        if(selectedPath.length > 1){
-            start = selectedPath[0];
-            end = selectedPath[selectedPath.length-1];
-            for(let i = 0; i < selectedPath.length-1; i++) {
+        if (selectedPath.length > 1) {
+            for (let i = 0; i < selectedPath.length - 1; i++) {
                 let typeOptions = allTypes.map(type => <option key={type} value={type}>{type}</option>);
                 keys.push(<div key={i} className="join-keys-pane">
-                    <span style={{marginRight:"5px", fontWeight:"bold"}}>{selectedPath[i]}</span>
-                    <select onChange={this.handleJoinTypeChange.bind(this, i)} value={joinTypes[i]}  className="input-sm">{typeOptions}</select>
-                    <span style={{marginLeft:"5px", fontWeight:"bold"}}>{selectedPath[i + 1]}</span>
+                    <span style={{marginRight: "5px", fontWeight: "bold"}}>{selectedPath[i]}</span>
+                    <select onChange={this.handleJoinTypeChange.bind(this, i)} value={joinTypes[i]}
+                            className="input-sm">{typeOptions}</select>
+                    <span style={{marginLeft: "5px", fontWeight: "bold"}}>{selectedPath[i + 1]}</span>
                     <JoinModalKeys key={i} index={i} keys={joinKeys[i]} onChange={this.handleKeysChange}/>
                 </div>);
             }
             //paths select
-            if(paths.length > 1){
-                let options = paths.map((p,i) => <option key={i} value={i}>{p.join(' => ')}</option>);
+            if (paths.length > 1) {
+                let options = paths.map((p, i) => <option key={i} value={i}>{p.join(' <= ')}</option>);
                 path = <select onChange={this.handlePathChange}
                                value={this.state.selectedIndex}
                                className="form-control input-sm"
-                               style={{marginTop:"5px"}}>{options}</select>
-            } else{
-                path = <span style={{marginTop:"5px", fontWeight:"bold", fontSize:"16px"}}>{selectedPath.join(' => ')}</span>
+                               style={{marginTop: "5px"}}>{options}</select>
+            } else {
+                path = <span
+                    style={{marginTop: "5px", fontWeight: "bold", fontSize: "16px"}}>{selectedPath.join(' => ')}</span>
             }
         }
         let buttons = <div>
-                <button onClick={this.handleSave} className="btn btn-success" style={{marginRight:"10px"}}>Save</button>
-                <button onClick={this.handleClose} className="btn btn-info">Close</button>
-            </div>;
-        if(this.props.confirmOnly){
+            <button onClick={this.handleSave} className="btn btn-success" style={{marginRight: "10px"}}>Save</button>
+            <button onClick={this.handleClose} className="btn btn-info">Close</button>
+        </div>;
+        if (this.props.confirmOnly) {
             buttons = <div>
-                <button onClick={this.handleSave}  className="btn btn-primary">Ok</button>
+                <button onClick={this.handleSave} className="btn btn-primary">Ok</button>
             </div>;
         }
         let entities = null;
-        if(joinedEntities.length > 1){
-            let options = joinedEntities.map((p,i) => <option key={i} value={p}>{p}</option>);
-            entities = <select onChange={this.handleJoinStartChange} value={this.state.joinStart} className="form-control input-sm">{options}</select>
+        if (joinedEntities.length > 1) {
+            let options = joinedEntities.map((p, i) => <option key={i} value={p}>{p}</option>);
+            entities = <select onChange={this.handleJoinStartChange} value={this.state.joinStart}
+                               className="form-control input-sm">{options}</select>
         }
         return (
             <div className="custom-modal-container">

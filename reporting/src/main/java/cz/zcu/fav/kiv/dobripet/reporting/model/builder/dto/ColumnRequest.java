@@ -1,8 +1,6 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers;
+package cz.zcu.fav.kiv.dobripet.reporting.model.builder.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.Column;
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.JoinParameters;
 
 import java.util.List;
 

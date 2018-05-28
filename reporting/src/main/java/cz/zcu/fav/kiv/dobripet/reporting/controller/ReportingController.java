@@ -1,26 +1,16 @@
 package cz.zcu.fav.kiv.dobripet.reporting.controller;
 
-import cz.zcu.fav.kiv.dobripet.reporting.model.Config;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.annotation.PostConstruct;
-
 /**
- * Created by Petr on 2/20/2017.
- *
  * ReportingController catches all request that aren't processed by resource handler or ApiController
  * Serves index page with react application
+ *
+ * Created by Petr on 2/20/2017.
  */
 @Controller
 public class ReportingController {
-    private Config config;
-
-    @Autowired
-    public void setConfig(Config config) {
-        this.config = config;
-    }
 
     /**
      * Handles requests for any mapping (/**)
@@ -29,10 +19,5 @@ public class ReportingController {
     @GetMapping("/**")
     public String getIndex(){
         return "index";
-    }
-
-    @PostConstruct
-    private void InitConfig(){
-        System.out.println("bean2 conf " + config);
     }
 }

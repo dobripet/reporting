@@ -4,34 +4,38 @@ import _ from 'lodash'
 import Search from './search'
 import EntityListItem from './entity-list-item'
 
-
-import {initState} from '../test/storeMock'
-
-export default class EntitySection extends React.Component{
+/**
+ * Entity section component, contains all entities
+ *
+ * Created by Petr on 3/19/2017.
+ */
+export default class EntitySection extends React.Component {
     constructor(props) {
         super(props);
         // bindings
         this.doSearch = _.debounce(props.searchEntityList, 500);
-        this.handleAddProperty  = this.handleAddProperty.bind(this);
+        this.handleAddProperty = this.handleAddProperty.bind(this);
         this.getEntityRowCount = this.getEntityRowCount.bind(this);
         this.getEntityPropertyStats = this.getEntityPropertyStats.bind(this);
     }
+
     componentDidMount() {
         //this.searchInput.focus();
-        console.log("testing fetch");
         this.props.fetchEntityList();
     }
-    getEntityRowCount(name){
+
+    getEntityRowCount(name) {
         this.props.getEntityRowCount(name);
     }
 
-    getEntityPropertyStats(entityName, propertyName){
+    getEntityPropertyStats(entityName, propertyName) {
         this.props.getEntityPropertyStats(entityName, propertyName);
     }
-    handleAddProperty (entity, properties){
-        console.log(entity, properties);
+
+    handleAddProperty(entity, properties) {
         this.props.addPropertiesToColumnList(entity, properties);
     }
+
     render() {
         const {
             entities,
@@ -41,27 +45,25 @@ export default class EntitySection extends React.Component{
             error
         } = this.props;
 
-        console.log('data', initState);
         //basic error handling
-        if(error){
-            console.log(error);
+        if (error) {
             return (<div className="entity-section"><h1>{error}</h1></div>);
         }
         let entityList = <span>No entity or column found!</span>;
         //filtering
         let filtered = entities;
-        if(search) {
+        if (search) {
             const text = search.toLowerCase();
             filtered = {};
-            for(let entity in entities){
-                if(entities[entity].name.toLowerCase().includes(text) ||
-                    Object.keys(entities[entity].properties).filter(property => property.toLowerCase().includes(text)).length > 0){
+            for (let entity in entities) {
+                if (entities[entity].name.toLowerCase().includes(text) ||
+                    Object.keys(entities[entity].properties).filter(property => property.toLowerCase().includes(text)).length > 0) {
                     filtered[entities[entity].name] = entities[entity];
                 }
             }
         }
         //sorting and mapping
-        if(Object.keys(filtered).length > 0) {
+        if (Object.keys(filtered).length > 0) {
             entityList = Object.keys(filtered).sort().map(entityName =>
                 <EntityListItem
                     key={entityName}
@@ -72,21 +74,20 @@ export default class EntitySection extends React.Component{
                     loading={statsLoading}
                 />);
         }
-        console.log(this.getEntityRowCount);
-        console.log("loading ", statsLoading);
         return (
             <div className="entity-section">
                 <div className="scrollable-content">
-                <Loader show={loading}>
-                    <Search id="search-input" placeholder="Search table or column" onChange={this.doSearch} focus={true} value={search}/>
+                    <Loader show={loading}>
+                        <Search id="search-input" placeholder="Search table or column" onChange={this.doSearch}
+                                focus={true} value={search}/>
                         {entityList}
-                </Loader>
+                    </Loader>
                 </div>
             </div>
 
         );
     }
 }
-EntitySection.PropTypes={
+EntitySection.PropTypes = {
     entities: React.PropTypes.object.isRequired
 };

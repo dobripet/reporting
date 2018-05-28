@@ -1,4 +1,4 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.builder;
+package cz.zcu.fav.kiv.dobripet.reporting.model.builder.dto;
 
 import cz.zcu.fav.kiv.dobripet.reporting.model.ForeignKey;
 

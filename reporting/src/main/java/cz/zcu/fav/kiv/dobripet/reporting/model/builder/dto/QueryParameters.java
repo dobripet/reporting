@@ -1,25 +1,16 @@
-package cz.zcu.fav.kiv.dobripet.reporting.model.builder.wrappers;
+package cz.zcu.fav.kiv.dobripet.reporting.model.builder.dto;
 
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.Column;
-import cz.zcu.fav.kiv.dobripet.reporting.model.builder.JoinParameters;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
 /**
  * Created by Petr on 6/10/2017.
  */
-public class CustomQueryRequest {
-    private String queryName;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class QueryParameters {
     private List<Column> columns;
     private List<JoinParameters> parameters;
-
-    public String getQueryName() {
-        return queryName;
-    }
-
-    public void setQueryName(String queryName) {
-        this.queryName = queryName;
-    }
 
     public List<Column> getColumns() {
         return columns;
@@ -36,5 +27,4 @@ public class CustomQueryRequest {
     public void setParameters(List<JoinParameters> parameters) {
         this.parameters = parameters;
     }
-
 }

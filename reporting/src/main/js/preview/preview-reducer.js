@@ -1,7 +1,12 @@
 import {QUERY_UPDATE_SQL_AND_PREVIEW} from '../query/query-actions'
-import { updateObject } from '../utils/utils'
-import { MENU_CLEAR } from '../menu/menu-actions'
+import {updateObject} from '../utils/utils'
+import {MENU_CLEAR} from '../menu/menu-actions'
 import typeToReducer from 'type-to-reducer'
+/**
+ * Data preview reducer
+ *
+ * Created by Petr on 3/4/2017.
+ */
 const initialState = {
     data: [],
     columnNames: [],
@@ -28,7 +33,7 @@ export default typeToReducer({
             updateObject(state, {
                 loading: false,
                 data: action.payload.previewData,
-                columnNames: action.payload.columns.map(c=>c.title)
+                columnNames: action.payload.columns.map(c => c.title)
             })
         ),
     },

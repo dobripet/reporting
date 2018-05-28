@@ -8,9 +8,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-
 /**
+ * Initialization for reporting web-module
+ *
  * Created by Petr on 4/27/2017.
  */
 public class ReportingInitializer{
@@ -42,19 +42,16 @@ public class ReportingInitializer{
      * Watches for changes in root context
      * Validates config to current database.
      * Initialize statistics
-     * @param event
+     * @param event refresh
      */
     @EventListener()
     @Transactional("dciTransactionManager")
     public void contextRefreshedEvent(ContextRefreshedEvent event){
         if(event.getApplicationContext().getParent() == null) {
-            System.out.println("stats " + statisticsService);
-            //init or clear paths
-            config.setPaths(new HashMap<>());
-            //init uris
-            config.initializeDocumentationUrl(documentationUrl);
             //do validation to database
             configValidator.validate();
+            //init uris
+            config.initializeDocumentationUrl(documentationUrl);
             //init statistics
             statisticsService.init();
         }

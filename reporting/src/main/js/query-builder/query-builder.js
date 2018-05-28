@@ -1,6 +1,3 @@
-/**
- * Created by Petr on 3/4/2017.
- */
 import React from 'react'
 import EntityContainer from '../entity/entity-container'
 import ColumnContainer from '../column/column-container'
@@ -9,16 +6,21 @@ import QueryContainer from '../query/query-container'
 import JoinContainer from '../join/join-container'
 import MenuContainer from '../menu/menu-container'
 import Modal from '../modal/modal'
-export default class QueryBuilder extends React.Component{
+
+/**
+ * Builder component
+ *
+ * Created by Petr on 3/4/2017.
+ */
+export default class QueryBuilder extends React.Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         let modal = null;
-        console.log("modal closed", this.props);
-        if(this.props.modalOpened){
+        if (this.props.modalOpened) {
             modal = <Modal modal={this.props.modal} dispatch={this.props.dispatch}/>;
-            console.log("modal otevrit");
         }
         return (
             <div className="vertical-app-container">

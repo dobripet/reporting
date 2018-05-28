@@ -1,15 +1,18 @@
-import {openModal, closeModal , TYPE_CONFIRM, TYPE_ERROR} from '../modal/modal-actions'
+/**
+ * Column actions, here are decided user clicks on add column
+ *
+ * Created by Petr on 3/21/2017.
+ */
+import {openModal, closeModal, TYPE_CONFIRM, TYPE_ERROR} from '../modal/modal-actions'
 import {splitJoin, createJoin, removeEntity} from '../join/join-actions'
-import {} from '../utils/utils'
 export const COLUMN_START_LOADER = 'COLUMN_START_LOADER';
-//TODO implementace loaderu v reducerech
-export function startLoader(){
+export function startLoader() {
     return {
         type: COLUMN_START_LOADER,
         payload: {}
     }
 }
-export function stopLoader(){
+export function stopLoader() {
     return {
         type: COLUMN_STOP_LOADER,
         payload: {}
@@ -17,7 +20,6 @@ export function stopLoader(){
 }
 export const COLUMN_STOP_LOADER = 'COLUMN_STOP_LOADER';
 export const COLUMN_LIST_ADD = 'COLUMN_LIST_ADD';
-export const COLUMN_LIST_ADD_POST= 'COLUMN_LIST_ADD_POST';
 //entity and array of properties
 export function addPropertiesToColumnList(entity, properties) {
     return (dispatch, getState) => {
@@ -28,12 +30,10 @@ export function addPropertiesToColumnList(entity, properties) {
         if (!Array.isArray(properties) || !Array.isArray(params) || !Array.isArray(columns)) {
             throw 'Properties, parameters or columns are not array!'
         }
-        console.log(JSON.stringify(properties));
         //create columns records from given data
         let columnsArray = [];
         for (let property of properties) {
             const columnName = `${entity.name} ${property.name}`;
-            console.log('wtf,', property);
             columnsArray.push({
                 name: columnName,
                 propertyName: property.name,
@@ -45,7 +45,7 @@ export function addPropertiesToColumnList(entity, properties) {
         dispatch(startLoader());
         //start processing add
         //first add
-        if(columns.length === 0 || (params.length === 0 && columns[0].entityName === entity.name)){
+        if (columns.length === 0 || (params.length === 0 && columns[0].entityName === entity.name)) {
             dispatch({
                 type: COLUMN_LIST_ADD,
                 payload: {columns: columnsArray, join: false}
@@ -54,20 +54,19 @@ export function addPropertiesToColumnList(entity, properties) {
         }
         //entity connected in join
         for (let j = 0; j < params.length; j++) {
-            console.log('tady1', params);
-            if(Array.isArray(params[j].selectedPath)){
-                for(let i = 0; i < params[j].selectedPath.length; i++) {
+            if (Array.isArray(params[j].selectedPath)) {
+                for (let i = 0; i < params[j].selectedPath.length; i++) {
                     if (params[j].selectedPath[i] === entity.name) {
                         //entity directly joined
-                        if(i === 0 || i === params[j].selectedPath.length-1){
+                        if (i === 0 || i === params[j].selectedPath.length - 1) {
                             dispatch({
                                 type: COLUMN_LIST_ADD,
                                 payload: {columns: columnsArray, join: false}
                             });
                             return;
-                        }else{
+                        } else {
                             //entity conned via selected path, do split path to create new connection
-                            dispatch(splitJoin(j,i));
+                            dispatch(splitJoin(j, i));
                             dispatch({
                                 type: COLUMN_LIST_ADD,
                                 payload: {columns: columnsArray, join: false}
@@ -76,127 +75,43 @@ export function addPropertiesToColumnList(entity, properties) {
                         }
                     }
                 }
-                console.log('tady2');
             } else {
                 //stop loader, should not happened
                 dispatch(stopLoader());
                 throw 'Parameter selectedPath is not array!'
             }
         }
-        console.log('dvojka');
         //need to make join
         //if first join join to present entity
-        if(params.length === 0){
+        if (params.length === 0) {
             dispatch(createJoin(columns[0].entityName, entity.name));
-        } else{
+        } else {
             //else to last join
-            dispatch(createJoin(params[params.length-1].selectedPath[params[params.length-1].selectedPath.length-1], entity.name));
+            dispatch(createJoin(params[params.length - 1].selectedPath[params[params.length - 1].selectedPath.length - 1], entity.name));
         }
         state = getState();
-        if(state.join.lastJoinFailed){
+        if (state.join.lastJoinFailed) {
             //stop loader
             dispatch(stopLoader());
             //show error message
-            dispatch(openModal(closeModal(),"Invalid action! There is no possible way to add selected column/s", TYPE_ERROR));
-        }else {
+            dispatch(openModal(closeModal(), "Invalid action! There is no possible way to add selected column/s", TYPE_ERROR));
+        } else {
             dispatch({
                 type: COLUMN_LIST_ADD,
                 payload: {columns: columnsArray, join: true}
             });
         }
-
-        console.log("potom se stalo ", state);
-        /*dispatch({
-            type: COLUMN_LIST_ADD_POST,
-            payload: fetch('http://localhost:8081/reporting/api/builder/columns', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    allColumns: state.column.columns,
-                    action: 0,
-                    columns: columnsArray,
-                    allJoinParameters: state.join.parameters
-                })
-            }).then(response => {
-                if(response.ok) {
-                    return response.json().then(json => {
-                        console.log('add post ', json);
-                        if(json.builder.status === 10){
-                            dispatch(openModal(closeModal(),"Invalid action! There is no possible way to add selected column/s", TYPE_ERROR));
-                        } else{
-                            dispatch({
-                                type: COLUMN_LIST_ADD,
-                                payload: columnsArray
-                            });
-                        }
-                        return Promise.resolve(json)
-                    });
-                } else {
-                    return response.json().then(err => Promise.reject(err));
-                }
-            })
-        });*/
-        console.log("potom se stalo ", state);
-        /*dispatch({
-            type: COLUMN_LIST_ADD,
-            payload: columnsArray
-        });*/
-
     }
 }
 export const COLUMN_LIST_REMOVE = 'COLUMN_LIST_REMOVE';
-export const COLUMN_LIST_REMOVE_POST = 'COLUMN_LIST_REMOVE_POST';
-export function removeColumnFromColumnList(columnIndex){
+export function removeColumnFromColumnList(columnIndex) {
     return (dispatch, getState) => {
         let state = getState();
         let column = state.column.columns[columnIndex];
         //check if removed columns is last for given entity and there are any joins
-        if(state.column.columns.filter(c => c.entityName === column.entityName).length <= 1 && state.join.parameters && state.join.parameters.length > 0){
-            //TODO po novem navrhu rejoinu tohle nikdy nebude
-            //check if it is middle entity
-            /*for(let parameter of state.join.parameters) {
-                for (let i = 1; i < parameter.selectedPath.length - 1; i++) {
-                    if (column.entityName === parameter.selectedPath[i]) {
-                        //if yes just remove, no need to rebuild
-                        dispatch({
-                            type: COLUMN_LIST_REMOVE,
-                            payload: columnIndex
-                        });
-                        return;
-                    }
-                }
-            }*/
+        if (state.column.columns.filter(c => c.entityName === column.entityName).length <= 1 && state.join.parameters && state.join.parameters.length > 0) {
             //else ask for remove in modal
             dispatch(openModal(dispatch => {
-                    /*dispatch({
-                        type: COLUMN_LIST_REMOVE_POST,
-                        payload: fetch('http://localhost:8081/reporting/api/builder/columns', {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                allColumns: state.column.columns,
-                                action: 1,
-                                columns: [column],
-                                allJoinParameters: state.join.parameters
-                            })
-                        }).then(response => {
-                            if(response.ok) {
-                                return response.json().then(json => {
-                                    console.log('remove post', json);
-                                    return Promise.resolve(json)
-                                });
-                            } else {
-                                return response.json().then(err => Promise.reject(err));
-                            }
-                        })
-                    });
-                    */
                     dispatch(removeEntity(column.entityName));
                     dispatch({
                         type: COLUMN_LIST_REMOVE,
@@ -215,16 +130,19 @@ export function removeColumnFromColumnList(columnIndex){
     }
 }
 export const COLUMN_LIST_EDIT = 'COLUMN_LIST_EDIT';
-export function editColumnTitle(columnIndex, title){
+export function editColumnTitle(columnIndex, title) {
     return {
         type: COLUMN_LIST_EDIT,
         payload: {columnIndex, title}
     }
 }
-export const COLUMN_LIST_SET_AGGREGATE = 'COLUMN_LIST_SET_AGGREGATE';
-export function setAggregateFunction(columnIndex, aggregateFunction){
-    return {
-        type: COLUMN_LIST_SET_AGGREGATE,
-        payload: {columnIndex, aggregateFunction}
+
+export const COLUMN_LIST_RECHECK = 'COLUMN_LIST_RECHECK';
+export function recheckColumnList() {
+    return (dispatch, getState) => {
+        dispatch({
+            type: COLUMN_LIST_RECHECK,
+            payload: {parameters: getState().join.parameters}
+        });
     }
 }

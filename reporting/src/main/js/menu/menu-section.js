@@ -1,9 +1,12 @@
 import React from 'react'
-import LoadModal from './load-modal'
-import SaveModal from './save-modal'
+import LoadQueryModal from './load-query-modal'
+import SaveQueryModal from './save-query-modal'
 import Notification from '../utils/notification'
-//import 'react-notifications/lib/notifications.css'
-
+/**
+ * Menu component
+ *
+ * Created by Petr on 4/5/2017.
+ */
 export default class MenuSection extends React.Component{
     constructor(props) {
         super(props);
@@ -30,15 +33,16 @@ export default class MenuSection extends React.Component{
             this.setState({showNotification : true});
             setTimeout(this.dismissNotification, 2000);
         }
+        if(nextProps.loading != this.props.loading && !nextProps.loading && !nextProps.error && this.state.showSaveModal){
+            this.handleCloseSaveModal();
+        }
     }
     handleClear (){
         this.props.clear();
     }
 
     handleSave (value){
-        console.log("save", value, this.state.isSaveAs);
         this.props.save(value, this.state.isSaveAs);
-        this.handleCloseSaveModal();
     }
 
     handleLoad (){
@@ -46,7 +50,6 @@ export default class MenuSection extends React.Component{
     }
 
     handleOpenLoadModal (){
-        console.log("openload");
         this.props.loadAllQueries();
         this.setState({showLoadModal: !this.state.showLoadModal});
     }
@@ -54,7 +57,6 @@ export default class MenuSection extends React.Component{
         this.setState({showLoadModal: !this.state.showLoadModal});
     }
     handleOpenSaveModal (){
-        console.log("opensave");
         //save current loaded query
         if(this.props.id) {
             this.props.save(this.props.name);
@@ -63,7 +65,6 @@ export default class MenuSection extends React.Component{
         this.setState({showSaveModal: !this.state.showSaveModal, isSaveAs: false});
     }
     handleOpenSaveAsModal (){
-        console.log("opensaveas");
         this.setState({showSaveModal: !this.state.showSaveModal, isSaveAs: true});
     }
     handleCloseSaveModal (){
@@ -80,19 +81,17 @@ export default class MenuSection extends React.Component{
             showLoadModal,
             showSaveModal
         } = this.state;
-        let loadModal = null;// loadAllQueries={this.props.loadAllQueries}
+        let loadModal = null;
         if(showLoadModal){
-            loadModal = <LoadModal onClose={this.handleCloseLoadModal} queries={this.props.queries} loadQuery={this.props.loadQuery}/>
+            loadModal = <LoadQueryModal onClose={this.handleCloseLoadModal} queries={this.props.queries} loadQuery={this.props.loadQuery} error={this.props.error}/>
         }
 
         let saveModal = null;
         if(showSaveModal){
-            saveModal = <SaveModal onClose={this.handleCloseSaveModal} onSave={this.handleSave}/>
+            saveModal = <SaveQueryModal onClose={this.handleCloseSaveModal} onSave={this.handleSave} error={this.props.error}/>
         }
-        console.log('wtf name', this.props.name);
         let btnStyle = {marginRight:"10px", verticalAlign: "text-bottom"};
-        let notification = null;
-        //}
+
         return (
             <div className="menu-section">
                 {loadModal}
@@ -117,6 +116,5 @@ MenuSection.PropTypes={
     newQuery: React.PropTypes.func.isRequired,
     queries: React.PropTypes.array,
     name: React.PropTypes.string,
-    //load: React.PropTypes.func.isRequired
     loadAllQueries: React.PropTypes.func.isRequired
 };

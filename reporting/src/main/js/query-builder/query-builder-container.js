@@ -1,9 +1,14 @@
-import { connect } from 'react-redux';
+/**
+ * Builder container
+ *
+ * Created by Petr on 3/15/2017.
+ */
+
+import {connect} from 'react-redux';
 import QueryBuilder from './query-builder';
 import {closeModal} from '../modal/modal-actions'
 
-const mapStateToProps = (state) =>{
-    console.log("modal map", state.modal);
+const mapStateToProps = (state) => {
     return {
         modal: {
             confirm: state.modal.confirm,
@@ -14,7 +19,7 @@ const mapStateToProps = (state) =>{
         modalOpened: state.modal.opened
     }
 };
-const mapDispatchToProps = (dispatch) =>{
+const mapDispatchToProps = (dispatch) => {
     return {
         dispatch: (action) => {
             if (action) {

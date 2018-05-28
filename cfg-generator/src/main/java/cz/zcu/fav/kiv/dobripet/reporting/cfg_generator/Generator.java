@@ -22,6 +22,8 @@ import java.util.*;
 
 
 /**
+ * Generates reporting-config.json from DCIx documentation.
+ *
  * Created by Petr on 3/24/2017.
  */
 public class Generator {
@@ -55,7 +57,7 @@ public class Generator {
                         //create property and set params
                         Property property = new Property();
                         //extract column name
-                        String  columnName = Xsoup.compile("/td[1]/text()").evaluate(row).get().trim();
+                        String columnName = Xsoup.compile("/td[1]/text()").evaluate(row).get().trim();
                         property.setName(columnName);
                         //extract column description
                         property.setNotNull(Xsoup.compile("/td[3]/allText()").evaluate(row).get().trim().length() > 0);
@@ -95,7 +97,7 @@ public class Generator {
                     Document schemaDocument = Jsoup.parse(schemaFile, "UTF-8");
                     //get rect elements that represent dividers for tables in svg code (all are in one hierarchy level)
                     Elements rects = Xsoup.compile("//svg/g/rect[@class=\"table\"]").evaluate(schemaDocument).getElements();
-                    if(rects.size() == 0){
+                    if (rects.size() == 0) {
                         System.err.println("Schema: " + schema + " could not be parsed!");
                     }
                     //process individual tables of given schema
@@ -105,49 +107,40 @@ public class Generator {
                         String tableName = "";
                         Map<String, List<ForeignKey>> references = new HashMap<>();
                         Map<String, List<ForeignKey>> referredBy = new HashMap<>();
-                        while(next != null && !next.is("rect")){
-                            //System.out.println("soused i je " +i +" "+ next);
+                        while (next != null && !next.is("rect")) {
                             //extract tableName
-                            if(next.is("a")) {
+                            if (next.is("a")) {
                                 String name = Xsoup.compile("/@xlink:href").evaluate(next).get();
-                                if(name != null && name.length() > 0 && !name.contains(".")){
+                                if (name != null && name.length() > 0 && !name.contains(".")) {
                                     tableName = name.substring(1);
                                 }
                             }
                             //extract foreign keys from ref
                             Elements ref = Xsoup.compile("/use[@id=\"ref\"]").evaluate(next).getElements();
-                            Element title = null;
-                            if(ref != null && ref.size() > 0 && (title = ref.get(0).nextElementSibling())!= null){
+                            Element title;
+                            if (ref != null && ref.size() > 0 && (title = ref.get(0).nextElementSibling()) != null) {
                                 parseTitleElement(title, tableName, references, referredBy);
                             }
                             //extract foreign keys from fk
                             Elements fk = Xsoup.compile("/use[@id=\"fk\"]").evaluate(next).getElements();
-                            title = null;
-                            if(fk != null && fk.size() > 0 && (title = fk.get(0).nextElementSibling())!= null){
+                            if (fk != null && fk.size() > 0 && (title = fk.get(0).nextElementSibling()) != null) {
                                 parseTitleElement(title, tableName, references, referredBy);
                             }
                             next = next.nextElementSibling();
                         }
-                        if(entities.get(tableName) != null) {
+                        if (entities.get(tableName) != null) {
                             entities.get(tableName).setReferenceMap(references);
                             entities.get(tableName).setReferredByMap(referredBy);
                             entities.get(tableName).setSchemaUrl(schema);
-                        } else{
-                            System.err.println("Table: " + tableName + " not found in created entities");
+                        } else {
+                            System.err.println("Table: " + tableName + " from schema " + schema + " not found in created entities");
                         }
                     }
-                }catch (IOException e) {
+                } catch (IOException e) {
                     System.err.println("Cannot open file " + schema + ". Program has to be run from documentation root directory!");
                     e.printStackTrace();
                 }
             }
-            //sorting to be more clear
-            /*List<String> sortedKeys = new ArrayList<String>(entities.keySet());
-            java.util.Collections.sort(sortedKeys);
-            List<Entity> sortedEntities = new ArrayList<Entity>();
-            for (String key : sortedKeys) {
-                sortedEntities.add(entities.get(key));
-            }*/
             config.setEntities(entities);
             ObjectMapper mapper = new ObjectMapper();
             //workaround for nice folding
@@ -167,13 +160,13 @@ public class Generator {
     }
 
 
-    private static void parseTitleElement(Element title, String tableName,  Map<String, List<ForeignKey>> references, Map<String, List<ForeignKey>> referredBy){
+    private static void parseTitleElement(Element title, String tableName, Map<String, List<ForeignKey>> references, Map<String, List<ForeignKey>> referredBy) {
         String column = title.text();
         String[] lines = column.split("\\r\\n|\\n|\\r");
         for (int j = 0; j < lines.length; j++) {
             //split in half
             String[] halves = lines[j].split("\\s*\\(\\s*");
-            if(halves.length != 2){
+            if (halves.length != 2) {
                 System.err.println("Table: " + tableName + " line could not be parsed: " + lines[j]);
                 continue;
             }
@@ -181,73 +174,71 @@ public class Generator {
                 if (lines[j].startsWith("References")) {
                     if (!parseReferences(halves, references, tableName)) {
                         //err occurred
-                        System.err.println("Chyba");
+                        System.err.println("Error");
                     }
                 } else if (lines[j].startsWith("Referred")) {
                     if (!parseReferredBy(halves, referredBy, tableName)) {
                         //err occurred
-                        System.err.println("Chyba");
+                        System.err.println("Error");
                     }
+                } else {
+                    System.err.println("Table: " + tableName + " foreign key could not be parsed: " + lines[j]);
                 }
-            else {
-                System.err.println("Table: " + tableName + " foreign key could not be parsed: " + lines[j]);
-            }
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.err.println("Table: " + tableName + " line could not be parsed: " + lines[j]);
             }
         }
     }
 
-    private static boolean parseReferences(String[] halves, Map<String, List<ForeignKey>> references, String tableName) throws ArrayIndexOutOfBoundsException{
+    private static boolean parseReferences(String[] halves, Map<String, List<ForeignKey>> references, String tableName) throws ArrayIndexOutOfBoundsException {
         //get foreign table name from first half
-        //usueal format: References tableName
+        //usual format: References tableName
         String foreignTableName = halves[0].split("\\s+")[1];
         //extract foreign keys from second half
         //usual formats: ( foreignKeyX -> localKeyX )    ( foreignKeyX -> localKeyX, localKeyY )
-        String[] keyHalves = halves[1].substring(0,halves[1].indexOf(")")).split("\\s*->\\s*");
+        String[] keyHalves = halves[1].substring(0, halves[1].indexOf(")")).split("\\s*->\\s*");
         List<String> localColumns = new ArrayList<>();
         List<String> foreignColumns = new ArrayList<>();
-        switch(keyHalves.length){
-            case 1 : {
+        switch (keyHalves.length) {
+            case 1: {
                 //no arrow ->, add all keys to local and foreign
                 localColumns.addAll(Arrays.asList(keyHalves[0].split(",?\\s+")));
                 foreignColumns.addAll(Arrays.asList(keyHalves[0].split(",?\\s+")));
-            } break;
-            case 2 : {
+            }
+            break;
+            case 2: {
                 //one arrow
                 //extract local columns from first half
                 localColumns.addAll(Arrays.asList(keyHalves[0].split(",?\\s+")));
                 //extract foreign columns from second half
                 foreignColumns.addAll(Arrays.asList(keyHalves[1].split(",?\\s+")));
-            } break;
-            default : {
+            }
+            break;
+            default: {
                 //error number of arrows
                 System.err.println("Table: " + tableName + " foreign key could not be parsed: multiple arrows (->):" + halves[1]);
                 return false;
             }
         }
-        List<ForeignKey> foreignKeys =  new ArrayList<>();
+        List<ForeignKey> foreignKeys = new ArrayList<>();
         addKeys(foreignKeys, localColumns, foreignColumns);
-        //TODO delete debug
-        if(foreignColumns.size()!= 1 || localColumns.size() != 1 ){
-            System.out.println(tableName);
-        }
         //add it to current list of keys if exists
         addAllKeys(references, foreignTableName, foreignKeys);
         return true;
     }
-    private static boolean parseReferredBy(String[] halves, Map<String, List<ForeignKey>> refferedBy, String tableName) throws ArrayIndexOutOfBoundsException{
+
+    private static boolean parseReferredBy(String[] halves, Map<String, List<ForeignKey>> refferedBy, String tableName) throws ArrayIndexOutOfBoundsException {
         //get foreign table name from first half
         //usual format: Referred By tableName
         String foreignTableName = halves[0].split("\\s+")[2];
         //extract foreign keys from second half
         //usual formats: ( foreignKeyX -> localKeyX, foreignKeyY -> localKeyY ) ( foreignKeyX -> localKeyX, localKeyY )
         List<ForeignKey> foreignKeys = new ArrayList<>();
-        String[] keyParts = halves[1].substring(0,halves[1].indexOf(")")).split("\\s*->\\s*");
+        String[] keyParts = halves[1].substring(0, halves[1].indexOf(")")).split("\\s*->\\s*");
         List<String> localColumns = new ArrayList<>();
         List<String> foreignColumns = new ArrayList<>();
         //no arrow ->, add all keys to local and foreign
-        if(keyParts.length == 1){
+        if (keyParts.length == 1) {
             foreignColumns.addAll(Arrays.asList(keyParts[0].split(",?\\s+")));
             localColumns.addAll(Arrays.asList(keyParts[0].split(",?\\s+")));
             addKeys(foreignKeys, localColumns, foreignColumns);
@@ -260,7 +251,6 @@ public class Generator {
                     foreignColumns.addAll(Arrays.asList(keyParts[i].split(",?\\s+")));
                 } else if (i == keyParts.length - 1) {
                     //last one, add all to last key
-                    //System.out.println("Index " + i);
                     localColumns.clear();
                     localColumns.addAll((Arrays.asList(keyParts[i].split(",?\\s+"))));
                     //complete new keys from previous round
@@ -273,7 +263,6 @@ public class Generator {
                         System.err.println("Table: " + tableName + " 'referred by' could not be parsed: middle part: " + halves[1]);
                         return false;
                     }
-                    //System.out.println("Index " + i);
                     localColumns.clear();
                     localColumns.add(keys.get(1));
                     //complete new keys from previous round
@@ -288,24 +277,26 @@ public class Generator {
         addAllKeys(refferedBy, foreignTableName, foreignKeys);
         return true;
     }
-    private static void addKeys(List<ForeignKey> keys,  List<String> locals, List<String> foreigns){
-        for(String l : locals){
-            for(String f : foreigns){
+
+    private static void addKeys(List<ForeignKey> keys, List<String> locals, List<String> foreigns) {
+        for (String l : locals) {
+            for (String f : foreigns) {
                 ForeignKey key = new ForeignKey(l, f, 2f, false);
-                if(!keys.contains(key)) {
+                if (!keys.contains(key)) {
                     keys.add(key);
                 }
             }
         }
     }
-    private static void addAllKeys(Map<String, List<ForeignKey>>  map, String foreignTableName, List<ForeignKey> foreignKeys){
-        if(map.get(foreignTableName) != null ){
-            for(ForeignKey key : foreignKeys){
-                if(!map.get(foreignTableName).contains(key)){
+
+    private static void addAllKeys(Map<String, List<ForeignKey>> map, String foreignTableName, List<ForeignKey> foreignKeys) {
+        if (map.get(foreignTableName) != null) {
+            for (ForeignKey key : foreignKeys) {
+                if (!map.get(foreignTableName).contains(key)) {
                     map.get(foreignTableName).add(key);
                 }
             }
-        }else{
+        } else {
             //create new record in map
             map.put(foreignTableName, foreignKeys);
         }

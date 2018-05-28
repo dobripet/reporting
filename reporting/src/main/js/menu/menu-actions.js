@@ -1,22 +1,25 @@
-import {openModal, closeModal , TYPE_CONFIRM, TYPE_ERROR} from '../modal/modal-actions'
+/**
+ * Menu actions
+ *
+ * Created by Petr on 4/5/2017.
+ */
+import {openModal, closeModal, TYPE_ERROR} from '../modal/modal-actions'
 export const MENU_CLEAR = 'MENU_CLEAR';
-export function clear () {
+export function clear() {
     return {
         type: MENU_CLEAR,
         payload: {}
     }
 }
 export const MENU_LOAD_ALL_QUERIES = 'MENU_LOAD_ALL_QUERIES';
-export function loadAllQueries () {
-    return (dispatch, getState) => {
-        console.log('loadall');
+export function loadAllQueries() {
+    return (dispatch) => {
         dispatch({
             type: MENU_LOAD_ALL_QUERIES,
             payload: fetch(`${BASE_URL}/api/builder/queries`)
                 .then(response => {
                     if (response.ok) {
                         return response.json().then(json => {
-                            console.log('save ', json);
                             return Promise.resolve(json)
                         });
                     } else {
@@ -27,23 +30,22 @@ export function loadAllQueries () {
     }
 }
 export const MENU_SAVE = 'MENU__SAVE';
-export function save (name, saveAs) {
+export function save(name, saveAs) {
     return (dispatch, getState) => {
         let state = getState();
         let id = state.menu.id;
         // null id will save as new record
-        if(saveAs){
+        if (saveAs) {
             id = null;
         }
         let url = `${BASE_URL}/api/builder/queries`;
         let method = 'POST';
-        if(id){
+        if (id) {
             url = `${url}/${id}`;
             method = 'PUT';
         }
         dispatch({
-            type:
-            MENU_SAVE,
+            type: MENU_SAVE,
             payload: fetch(url, {
                 method,
                 headers: {
@@ -58,8 +60,6 @@ export function save (name, saveAs) {
             }).then(response => {
                 if (response.status === 201 || response.status === 200) {
                     return response.json().then(json => {
-                        console.log('save ', json);
-                        //todo dispatch fading info that its ok
                         dispatch(savedOk());
                         return Promise.resolve(json)
                     });
@@ -71,9 +71,9 @@ export function save (name, saveAs) {
     }
 }
 export const MENU_LOAD_QUERY = 'MENU_LOAD_QUERY';
-export function loadQuery (id) {
+export function loadQuery(id) {
     return (dispatch, getState) => {
-        let query = getState().menu.queries.filter(q=>q.id === id)[0];
+        let query = getState().menu.queries.filter(q => q.id === id)[0];
 
         try {
             let params = JSON.parse(query.queryParameters);
@@ -86,14 +86,14 @@ export function loadQuery (id) {
                     queryName: query.queryName
                 }
             })
-        } catch (e){
-            dispatch(openModal(closeModal(),"Failed to parse saved query!", TYPE_ERROR));
+        } catch (e) {
+            dispatch(openModal(closeModal(), "Failed to parse saved query!", TYPE_ERROR));
         }
 
     }
 }
 export const MENU_NEW_QUERY = 'MENU_NEW_QUERY';
-export function newQuery () {
+export function newQuery() {
     return (dispatch) => {
         dispatch(clear());
         dispatch({
@@ -103,7 +103,7 @@ export function newQuery () {
     }
 }
 export const SHOW_SAVED_OK = 'SHOW_SAVED_OK';
-export function savedOk () {
+export function savedOk() {
     return {
         type: SHOW_SAVED_OK,
         payload: {}
